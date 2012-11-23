@@ -395,25 +395,23 @@ class Application(Frame):
           if n_sets_to_plot <1:
                   n_sets_to_plot = 1
 
-          
-          
-          for i in range(self.k):
-  
-                  
-                  # makes sure that if there are fewer sets than selected for plotting (e.g. at the very beginning, that only this fewer sets are plotted
-                  if len(self.dat[i]) < n_sets_to_plot + 1:
-                          n_sets_to_plot = 0
-                  
-                  
 
-                  try:    
-                          if self.k == 0:
-                                  self.ax.plot(self.t[-n_sets_to_plot:], np.array(self.dat[i][-n_sets_to_plot:]), label = 'pi pump')
-                          if self.k == 1:
-                                  self.ax.plot(self.t[-n_sets_to_plot:], np.array(self.dat[i][-n_sets_to_plot:]), label = 'pi comb')
-                  except:
-                          print 'couldnt plot'
           
+          # makes sure that if there are fewer sets than selected for plotting (e.g. at the very beginning, that only this fewer sets are plotted
+          if len(self.dat[i]) < n_sets_to_plot + 1:
+            print "Nothing to plot"
+            n_sets_to_plot = 0
+          
+          
+
+          try:    
+                  if self.k == 0:
+                          self.ax.plot(self.t[-n_sets_to_plot:], np.array(self.dat[i][-n_sets_to_plot:]), label = 'pi pump')
+                  if self.k == 1:
+                          self.ax.plot(self.t[-n_sets_to_plot:], np.array(self.dat[i][-n_sets_to_plot:]), label = 'pi comb')
+          except:
+                  print 'couldnt plot'
+  
           
           plt.legend(loc = 'lower left')
           if self.limit_plot_y_axis.get():
