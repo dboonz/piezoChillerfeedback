@@ -396,12 +396,12 @@ class Application(Frame):
                   n_sets_to_plot = 1
 
 
-          
-          # makes sure that if there are fewer sets than selected for plotting (e.g. at the very beginning, that only this fewer sets are plotted
-          if len(self.dat[i]) < n_sets_to_plot + 1:
-            print "Nothing to plot"
-            n_sets_to_plot = 0
-          
+#          
+#          # makes sure that if there are fewer sets than selected for plotting (e.g. at the very beginning, that only this fewer sets are plotted
+#          if len(self.dat[i]) < n_sets_to_plot + 1:
+#            print "Nothing to plot"
+#            n_sets_to_plot = 0
+#          
           
 
           try:    
