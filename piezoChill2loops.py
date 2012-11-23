@@ -22,7 +22,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolb
 PIEZO_VOLTAGE_MAX = 10 # could be 7, TODO
 # voltages are -1 to 6
 # offset = 2.6
-chiller_serialport = 4
+chiller_serialport = 3
                 
 
 
@@ -285,15 +285,8 @@ class Application(Frame):
                 
                 data = read_voltage(self.taskHandle, self.nr_samples, self.data, self.read)
                 for i in range(self.k):
+                        print "Measured something:", numpy.average(self.data)
                         self.dat[i].append(numpy.average(self.data))
-        
-        def read_data_NI_daqmx_b(self):
-                
-                data2 = read_voltage(self.taskHandle_b, self.nr_samples, self.data2, self.read)
-                for i in range(self.k):
-                        self.dat[i].append(numpy.average(self.data))
-
-        
         
         def feedback_T(self):
                 #xxx
