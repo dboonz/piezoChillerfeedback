@@ -1,0 +1,43 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+Application	piezoChill4_twoLoops.py	/^class Application(Frame):$/;"	c
+PIEZO_VOLTAGE_MAX	piezoChill4_twoLoops.py	/^PIEZO_VOLTAGE_MAX = 7.$/;"	v
+PIEZO_VOLTAGE_MAX_b	piezoChill4_twoLoops.py	/^PIEZO_VOLTAGE_MAX_b = 10.$/;"	v
+Quit	piezoChill4_twoLoops.py	/^        def Quit(self):$/;"	f	function:Application.read_data_NI_daqmx_b
+TEMP_MAX	serialChiller4.py	/^TEMP_MAX = 300$/;"	v
+TEMP_MIN	serialChiller4.py	/^TEMP_MIN = 160$/;"	v
+__init__	piezoChill4_twoLoops.py	/^        def __init__(self,master = None):$/;"	m	class:Application
+asci_com_read_manifold_temperature	serialChiller4.py	/^asci_com_read_manifold_temperature = hexToAscii(com_read_manifold_temperature) #read actual temperature$/;"	v
+asci_com_read_memory	serialChiller4.py	/^asci_com_read_memory = hexToAscii(com_read_memory) # read set temperature$/;"	v
+asci_com_serial_watchdog	serialChiller4.py	/^asci_com_serial_watchdog = hexToAscii(com_serial_watchdog)$/;"	v
+asciiToHex	serialChiller4.py	/^def asciiToHex(asciiStr):$/;"	f
+attemps_connect_to_chiller	piezoChill4_twoLoops.py	/^		attemps_connect_to_chiller = 0$/;"	v	class:Application
+close_chiller_port	serialChiller4.py	/^def close_chiller_port(serialPort):$/;"	f
+com_read_manifold_temperature	serialChiller4.py	/^com_read_manifold_temperature = '2E4937370D'$/;"	v
+com_read_memory	serialChiller4.py	/^com_read_memory = '2E483041360D'$/;"	v
+com_serial_watchdog	serialChiller4.py	/^com_serial_watchdog = '2E5538330D'$/;"	v
+createWidgets	piezoChill4_twoLoops.py	/^        def createWidgets(self):$/;"	m	class:Application
+deleteData	piezoChill4_twoLoops.py	/^        def deleteData(self):$/;"	m	class:Application
+feedback_T	piezoChill4_twoLoops.py	/^        def feedback_T(self):$/;"	f	function:Application.read_data_NI_daqmx_b
+feedback_T_b	piezoChill4_twoLoops.py	/^        def feedback_T_b(self):$/;"	f	function:Application.read_data_NI_daqmx_b
+hexToAscii	serialChiller4.py	/^def hexToAscii(hexStr):$/;"	f
+initSerialToChiller_and_NI_daqmx	piezoChill4_twoLoops.py	/^        def initSerialToChiller_and_NI_daqmx(self):$/;"	m	class:Application
+mainLoop	piezoChill4_twoLoops.py	/^        def mainLoop(self):$/;"	f	function:Application.read_data_NI_daqmx_b
+open_chiller_port	serialChiller4.py	/^def open_chiller_port(comport):$/;"	f
+readChillerStatus	serialChiller4.py	/^def readChillerStatus(serialPort, print_statues = True, print_chiller_working_Fine = False):$/;"	f
+readCoolantTemperature	serialChiller4.py	/^def readCoolantTemperature(serialPort):$/;"	f
+readSetTemperature	serialChiller4.py	/^def readSetTemperature(serialPort):$/;"	f
+read_data_NI_daqmx	piezoChill4_twoLoops.py	/^        def read_data_NI_daqmx(self):$/;"	m	class:Application
+read_data_NI_daqmx_b	piezoChill4_twoLoops.py	/^	def read_data_NI_daqmx_b(self):$/;"	m	class:Application
+realtemp	serialChiller4.py	/^        realtemp = readCoolantTemperature(serialPort = s)$/;"	v
+s	serialChiller4.py	/^        s = open_chiller_port('\/dev\/ttyUSB0')$/;"	v
+save	piezoChill4_twoLoops.py	/^        def save(self): $/;"	f	function:Application.read_data_NI_daqmx_b
+setTemperature	serialChiller4.py	/^def setTemperature(serialPort, temp = 200):$/;"	f
+settemp	serialChiller4.py	/^        settemp = readSetTemperature(serialPort = s)$/;"	v
+status	serialChiller4.py	/^        status = readChillerStatus(serialPort = s)$/;"	v
+test	piezoChill4_twoLoops.py	/^        def test(self):$/;"	f	function:Application.read_data_NI_daqmx_b
+update_plots	piezoChill4_twoLoops.py	/^        def update_plots(self):$/;"	f	function:Application.read_data_NI_daqmx_b
