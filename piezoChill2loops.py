@@ -358,7 +358,7 @@ class Application(Frame):
                 
                 if not self.devices_initialised.get():
                         self.initSerialToChiller_and_NI_daqmx()
-                        print ''
+                        print 'serialToChiller set up'
                 
                 self.stopLoop.set(0)
                 
@@ -370,7 +370,9 @@ class Application(Frame):
 
                 while self.stopLoop.get() != 1:
                   print "in main-while-loop"
+                  print "Reading NI"
                   self.read_data_NI_daqmx()
+                  print "updating plots"
                   self.update_plots()
                   if self.T_feedback.get():
                     self.feedback_T()
