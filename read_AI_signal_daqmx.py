@@ -6,10 +6,6 @@
 
 import ctypes
 import numpy
-#import pylab
-import matplotlib
-matplotlib.use('TkAgg')
-import matplotlib.pyplot as plt
 import time
 nidaq = ctypes.windll.nicaiu # load the DLL
 
@@ -97,47 +93,52 @@ def read_voltage(taskHandle, nr_samples, data, read):
 
 
 if __name__ == "__main__":
-    fig = plt.figure()
-    read = int32()
-    taskHandle = TaskHandle(0)
-    nr_samples = 10
-    data = init_channel(taskHandle,nr_samples,10000.0)
 
-    points = []
-    time_axis = []
+  #import pylab
+  import matplotlib
+  matplotlib.use('TkAgg')
+  import matplotlib.pyplot as plt
+  fig = plt.figure()
+  read = int32()
+  taskHandle = TaskHandle(0)
+  nr_samples = 10
+  data = init_channel(taskHandle,nr_samples,10000.0)
 
-    ax = fig.add_subplot(111)
-    line, = ax.plot([], [])
-    ax.set_ylim(-1.1, 1.1)
-    ax.set_xlim(0, 5)
+  points = []
+  time_axis = []
 
-    #image, = pylab.plot(x,points)
+  ax = fig.add_subplot(111)
+  line, = ax.plot([], [])
+  ax.set_ylim(-1.1, 1.1)
+  ax.set_xlim(0, 5)
 
-    start = time.time()
-    for i in range(30):
-        data = read_voltage(taskHandle, nr_samples, data, read)
-        points.append(numpy.average(data))
-        time_axis.append(i)
-        
-        line.set_data(time_axis,points)
-        ax.set_xlim(0,30)
-        ax.set_ylim(0,10)
-        #ax.set_xlim(0,i+1.0)
-        #ax.set_ylim(min(points),max(points))
-        ax.figure.canvas.draw()
-        time.sleep(.01)
-        
+  #image, = pylab.plot(x,points)
 
-
-    print (time.time()-start)/100.0
-    print "Acquired %d points"%(read.value)
-
-
-
-    if taskHandle.value != 0:
-        nidaq.DAQmxStopTask(taskHandle)
-        nidaq.DAQmxClearTask(taskHandle)
+  start = time.time()
+  for i in range(30):
+      data = read_voltage(taskHandle, nr_samples, data, read)
+      points.append(numpy.average(data))
+      time_axis.append(i)
+      
+      line.set_data(time_axis,points)
+      ax.set_xlim(0,30)
+      ax.set_ylim(0,10)
+      #ax.set_xlim(0,i+1.0)
+      #ax.set_ylim(min(points),max(points))
+      ax.figure.canvas.draw()
+      time.sleep(.01)
+      
 
 
-    print numpy.average(data)
+  print (time.time()-start)/100.0
+  print "Acquired %d points"%(read.value)
+
+
+
+  if taskHandle.value != 0:
+      nidaq.DAQmxStopTask(taskHandle)
+      nidaq.DAQmxClearTask(taskHandle)
+
+
+  print numpy.average(data)
 
