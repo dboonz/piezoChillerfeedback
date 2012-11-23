@@ -287,7 +287,7 @@ class Application(Frame):
                 
                 data = read_voltage(self.taskHandle, self.nr_samples, self.data, self.read)
                 for i in range(self.k):
-                        print "Measured something:", numpy.average(self.data)
+                     #   print "Measured something:", numpy.average(self.data)
                         self.dat[i].append(numpy.average(self.data))
         
         def feedback_T(self):
@@ -371,10 +371,10 @@ class Application(Frame):
                 
 
                 while self.stopLoop.get() != 1:
-                  print "in main-while-loop"
-                  print "Reading NI"
+                  #print "in main-while-loop"
+                  #print "Reading NI"
                   self.read_data_NI_daqmx()
-                  print "updating plots"
+                  #print "updating plots"
                   self.update_plots()
                   if self.T_feedback.get():
                     self.feedback_T()
@@ -383,14 +383,14 @@ class Application(Frame):
 
         
         def update_plots(self):
-          print "In update_plots"
+          #print "In update_plots"
           self.t.append(time.time() - self.t0)
 
           ### PLOTTING
           self.ax.clear()
           ### updates the plots for the last n_sets_to_plot data aquisitions. x axis divided by 28 to come to seconds instead of shots
           n_sets_to_plot = self.sets_to_plot.get()
-          print 'n_sets_to_plot: %d' % n_sets_to_plot
+          #print 'n_sets_to_plot: %d' % n_sets_to_plot
           n_sets_to_plot = min(n_sets_to_plot, len(self.t))
           if n_sets_to_plot <1:
                   n_sets_to_plot = 1
