@@ -228,6 +228,8 @@ class Application(Frame):
                 self.ax = plt.subplot(111)
                 self.ax.set_ylabel('signal [V]')
                 self.ax.set_xlabel('t [s]')              
+                self.ax.plot([1,4,2])
+                self.canvas.draw()
 
                
 
