@@ -403,7 +403,7 @@ class Application(Frame):
 #            n_sets_to_plot = 0
 #          
           
-
+          print self.dat
           try:    
                   if self.k == 0:
                           self.ax.plot(self.t[-n_sets_to_plot:], np.array(self.dat[i][-n_sets_to_plot:]), label = 'pi pump')
