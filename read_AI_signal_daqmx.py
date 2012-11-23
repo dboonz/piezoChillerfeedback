@@ -9,7 +9,6 @@ import numpy
 import time
 nidaq = ctypes.windll.nicaiu # load the DLL
 
-plt.ion()
 
 
 ##############################
@@ -98,6 +97,8 @@ if __name__ == "__main__":
   import matplotlib
   matplotlib.use('TkAgg')
   import matplotlib.pyplot as plt
+
+  plt.ion()
   fig = plt.figure()
   read = int32()
   taskHandle = TaskHandle(0)
