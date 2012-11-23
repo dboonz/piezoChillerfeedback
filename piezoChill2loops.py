@@ -379,44 +379,44 @@ class Application(Frame):
 
         
         def update_plots(self):
-                
-                self.t.append(time.time() - self.t0)
+          print "In update_plots"
+          self.t.append(time.time() - self.t0)
 
-                ### PLOTTING
-                self.ax.clear()
-                ### updates the plots for the last n_sets_to_plot data aquisitions. x axis divided by 28 to come to seconds instead of shots
-                n_sets_to_plot = self.sets_to_plot.get()
-                
-                n_sets_to_plot = min(n_sets_to_plot, len(self.t))
-                if n_sets_to_plot <1:
-                        n_sets_to_plot = 1
-                
-                
-                for i in range(self.k):
-        
-                        
-                        # makes sure that if there are fewer sets than selected for plotting (e.g. at the very beginning, that only this fewer sets are plotted
-                        if len(self.dat[i]) < n_sets_to_plot + 1:
-                                n_sets_to_plot = 0
-                        
-                        
+          ### PLOTTING
+          self.ax.clear()
+          ### updates the plots for the last n_sets_to_plot data aquisitions. x axis divided by 28 to come to seconds instead of shots
+          n_sets_to_plot = self.sets_to_plot.get()
+          
+          n_sets_to_plot = min(n_sets_to_plot, len(self.t))
+          if n_sets_to_plot <1:
+                  n_sets_to_plot = 1
+          
+          
+          for i in range(self.k):
+  
+                  
+                  # makes sure that if there are fewer sets than selected for plotting (e.g. at the very beginning, that only this fewer sets are plotted
+                  if len(self.dat[i]) < n_sets_to_plot + 1:
+                          n_sets_to_plot = 0
+                  
+                  
 
-                        try:    
-                                if self.k == 0:
-                                        self.ax.plot(self.t[-n_sets_to_plot:], np.array(self.dat[i][-n_sets_to_plot:]), label = 'pi pump')
-                                if self.k == 1:
-                                        self.ax.plot(self.t[-n_sets_to_plot:], np.array(self.dat[i][-n_sets_to_plot:]), label = 'pi comb')
-                        except:
-                                print 'couldnt plot'
-                
-                
-                plt.legend(loc = 'lower left')
-                if self.limit_plot_y_axis.get():
-                        plt.ylim( self.y1lim.get(), self.y2lim.get() )
-                self.fig.canvas.draw()
+                  try:    
+                          if self.k == 0:
+                                  self.ax.plot(self.t[-n_sets_to_plot:], np.array(self.dat[i][-n_sets_to_plot:]), label = 'pi pump')
+                          if self.k == 1:
+                                  self.ax.plot(self.t[-n_sets_to_plot:], np.array(self.dat[i][-n_sets_to_plot:]), label = 'pi comb')
+                  except:
+                          print 'couldnt plot'
+          
+          
+          plt.legend(loc = 'lower left')
+          if self.limit_plot_y_axis.get():
+                  plt.ylim( self.y1lim.get(), self.y2lim.get() )
+          self.fig.canvas.draw()
 
-                #print 'plots updated'
-                #root.update_idletasks()
+          #print 'plots updated'
+          #root.update_idletasks()
 
 
 
