@@ -388,10 +388,11 @@ class Application(Frame):
           self.ax.clear()
           ### updates the plots for the last n_sets_to_plot data aquisitions. x axis divided by 28 to come to seconds instead of shots
           n_sets_to_plot = self.sets_to_plot.get()
-          
+          print 'n_sets_to_plot: %d' % n_sets_to_plot
           n_sets_to_plot = min(n_sets_to_plot, len(self.t))
           if n_sets_to_plot <1:
                   n_sets_to_plot = 1
+
           
           
           for i in range(self.k):
@@ -416,11 +417,6 @@ class Application(Frame):
           if self.limit_plot_y_axis.get():
                   plt.ylim( self.y1lim.get(), self.y2lim.get() )
           self.fig.canvas.draw()
-
-          #print 'plots updated'
-          #root.update_idletasks()
-
-
 
                 
         def test(self):
