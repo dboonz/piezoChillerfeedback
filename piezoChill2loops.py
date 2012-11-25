@@ -35,201 +35,174 @@ class Application(Frame):
                 self.mainframe = self
                 print 'serial chiller'
                 self.createWidgets()
-                
 
         def createWidgets(self):
-                #self.SystemF = Frame(self,bd=2, relief = RIDGE)
-                #self.SystemF.grid()#, columnspan =16)
-                                        
-                                        
-                                        
-                ### suself.valuesFames
-                
-                self.firstF = Frame(self.mainframe,bd=2, relief = RIDGE)
-                self.firstF.grid()
+            """ Creates the widgets for this application """
+            " Top frame "
+            self.firstF = Frame(self.mainframe,bd=2, relief = RIDGE)
+            self.firstF.grid()
 
-                self.device1 = LabelFrame(self.mainframe,bd=2, relief = RIDGE)#, text = 'Temp. feedback rep.rate')
-                self.device1.grid(row = 1, column = 0)#, columnspan = 4)                
-        
-                self.chillerFeedback_LF = LabelFrame(self.mainframe,bd=2, relief = RIDGE, text = 'PUMP: Temp. feedback rep.rate')
-                self.chillerFeedback_LF.grid(row = 2, column = 0)#, columnspan = 4)
-                
-                self.chillerFeedback_LF_b = LabelFrame(self.mainframe,bd=2, relief = RIDGE, text = 'COMB: Temp. feedback rep.rate')
-                self.chillerFeedback_LF_b.grid(row = 3, column = 0)#, columnspan = 4)
+            " Frame for device "
+            self.device1 = LabelFrame(self.mainframe,bd=2, relief = RIDGE)#, text = 'Temp. feedback rep.rate')
+            self.device1.grid(row = 1, column = 0)#, columnspan = 4)                
 
-                self.save_LF = LabelFrame(self.mainframe,bd=2, relief = RIDGE)#, text = 'fit')
-                self.save_LF.grid(row = 4, column = 0)#, columnspan = 4)
-                
-                ### self.firstF
-                self.stopLoop = IntVar()
-                self.stopLoop.set(0)
-                
-                self.LastDataSaved = IntVar()
-                self.LastDataSaved.set(0)
-                
-                self.devices_initialised = IntVar()
-                self.devices_initialised.set(0)
-                
-                self.deviationVoltage_DG= DoubleVar()
-                self.deviationVoltage_DG.set(0.05)
-                
-##                self.serialport = StringVar()
-##                self.serialport.set(GPIB_USB_ADAPTER_ADRESS)
-                
-                self.startB = Button(self.firstF, text = 'gumbo', command = self.mainLoop)
-                self.startB.pack(side = LEFT)
-                
-                self.stopLoopCB = Checkbutton(self.firstF, text = 'halt', variable = self.stopLoop)
-                self.stopLoopCB.pack(side = LEFT, padx = 10)
-                
-                #self.InitialiseB = Button(self.firstF, text = 'init GPIB', command = self.initGPIBandSerial)
-                #self.InitialiseB.pack(side = LEFT)
-                
-                self.deleteDataB = Button(self.firstF, text = 'delete Data', command = self.deleteData)
-                self.deleteDataB.pack(side = LEFT)
+            " Chiller feedback frame"
+            self.chillerFeedback_LF = LabelFrame(self.mainframe,bd=2, relief = RIDGE, text = 'PUMP: Temp. feedback rep.rate')
+            self.chillerFeedback_LF.grid(row = 2, column = 0)#, columnspan = 4)
+           
+            self.save_LF = LabelFrame(self.mainframe,bd=2, relief = RIDGE)#, text = 'fit')
+            self.save_LF.grid(row = 4, column = 0)#, columnspan = 4)
+            
+            " Create the variables for the application "
+            self.stopLoop = IntVar()
+            self.stopLoop.set(0)
+            
+            self.LastDataSaved = IntVar()
+            self.LastDataSaved.set(0)
+            
+            self.devices_initialised = IntVar()
+            self.devices_initialised.set(0)
+            
+            self.deviationVoltage_DG= DoubleVar()
+            self.deviationVoltage_DG.set(0.05)
+            
+            " Startbutton with 'gumbo'"
+            self.startB = Button(self.firstF, text = 'gumbo', command = self.mainLoop)
+            self.startB.pack(side = LEFT)
+            
+            " Checkbox for stopping "
+            self.stopLoopCB = Checkbutton(self.firstF, text = 'halt', variable = self.stopLoop)
+            self.stopLoopCB.pack(side = LEFT, padx = 10)
+            
+            self.deleteDataB = Button(self.firstF, text = 'delete Data', command = self.deleteData)
+            self.deleteDataB.pack(side = LEFT)
 
-                
-                
-                #self.serialportE= Entry(self.firstF, textvariable=self.serialport, bg='white', width = 11)
-                #self.serialportE.pack(side = LEFT)
-                
-                self.testB = Button(self.firstF, text = 're-read set temp', command = self.test)
-                self.testB.pack(side = LEFT)
-                
-                
-                self.deviationVoltage_DGE= Entry(self.firstF, textvariable=self.deviationVoltage_DG, bg='white', width = 11)
-                self.deviationVoltage_DGE.pack(side = LEFT)
+            self.testB = Button(self.firstF, text = 're-read set temp', command = self.test)
+            self.testB.pack(side = LEFT)
+            
+            
+            self.deviationVoltage_DGE= Entry(self.firstF, textvariable=self.deviationVoltage_DG, bg='white', width = 11)
+            self.deviationVoltage_DGE.pack(side = LEFT)
 
-                
-                self.ShutdownAndQuitB = Button(self.firstF, text = "Quit", command = self.Quit)
-                self.ShutdownAndQuitB.pack(side = RIGHT)
-                
+            
+            self.ShutdownAndQuitB = Button(self.firstF, text = "Quit", command = self.Quit)
+            self.ShutdownAndQuitB.pack(side = RIGHT)
+            
 
-                #self.time_per_meas = DoubleVar()
-                #Label(self.device1, text = "time per meas: [ms]").pack(side = LEFT)
-                #self.time_per_measE= Entry(self.device1, textvariable=self.time_per_meas, bg='white', width = 5)
-                #self.time_per_measE.pack(side = LEFT)
+            self.k = number_dataArrays = 2
+            self.k = number_dataArrays = 2 # Don't know what it does, but
+                                            # probably it should be one if there's only one monitoring
+            
+            self.dat = []
+            for a in range(self.k):
+                    self.dat.append([])
+            
+            self.t = []
+            
+            self.font_label=('Helvetica', 20, 'bold')
+            self.font_entry = ('Helvetica', 30, 'bold')
                 
+            self.sleep_time_per_meas = DoubleVar()
+            self.sleep_time_per_meas.set(500)
+            
+            self.limit_plot_y_axis = IntVar()
+            self.limit_plot_y_axis.set(0)
+            
+            self.y1lim = DoubleVar()
+            self.y1lim.set(0.9)
+            
+            self.y2lim = DoubleVar()
+            self.y2lim.set(1.1)
 
+            
+            self.sets_to_plot = IntVar()
+            self.sets_to_plot.set(500)
+            
+    
+            self.filename = StringVar()
+            self.filename.set('temp.txt')
 
-                self.k = number_dataArrays = 2
-                self.k = number_dataArrays = 2 # Don't know what it does, but
-                                              # probably it should be one if there's only one monitoring
-                
-                self.dat = []
-                for a in range(self.k):
-                        self.dat.append([])
-                
-                self.t = []
-                
-                
-                self.font_label=('Helvetica', 20, 'bold')
-                self.font_entry = ('Helvetica', 30, 'bold')
-                 
-                ### self.save_LF
-                
-                self.sleep_time_per_meas = DoubleVar()
-                self.sleep_time_per_meas.set(500)
-                
-                self.limit_plot_y_axis = IntVar()
-                self.limit_plot_y_axis.set(0)
-                
-                self.y1lim = DoubleVar()
-                self.y1lim.set(0.9)
-                
-                self.y2lim = DoubleVar()
-                self.y2lim.set(1.1)
+            Label(self.device1, text = "sleep time [ms]").pack(side = LEFT)
+            self.sleep_time_per_measE= Entry(self.device1, textvariable=self.sleep_time_per_meas, bg='white', width = 5)
+            self.sleep_time_per_measE.pack(side = LEFT)
 
-                
-                self.sets_to_plot = IntVar()
-                self.sets_to_plot.set(500)
-                
-        
-                self.filename = StringVar()
-                self.filename.set('temp.txt')
+            self.stopLoopCB = Checkbutton(self.device1, text = 'ylims', variable = self.limit_plot_y_axis)
+            self.stopLoopCB.pack(side = LEFT, padx = 10)
 
-                Label(self.device1, text = "sleep time [ms]").pack(side = LEFT)
-                self.sleep_time_per_measE= Entry(self.device1, textvariable=self.sleep_time_per_meas, bg='white', width = 5)
-                self.sleep_time_per_measE.pack(side = LEFT)
+            self.y1E= Entry(self.device1, textvariable=self.y1lim, bg='white', width = 5)
+            self.y1E.pack(side = LEFT)
+            
+            self.y2E= Entry(self.device1, textvariable=self.y2lim, bg='white', width = 5)
+            self.y2E.pack(side = LEFT)
+            
+            Label(self.save_LF, text = "sets to plot:").pack(side = LEFT)
+            self.sets_to_plotE= Entry(self.save_LF, textvariable=self.sets_to_plot, bg='white', width = 5)
+            self.sets_to_plotE.pack(side = LEFT)
 
-                self.stopLoopCB = Checkbutton(self.device1, text = 'ylims', variable = self.limit_plot_y_axis)
-                self.stopLoopCB.pack(side = LEFT, padx = 10)
+            self.saveB = Button(self.save_LF, text = "save", command = self.save)
+            self.saveB.pack(side = LEFT)
+            
+            self.filenameE= Entry(self.save_LF, textvariable=self.filename, bg='white', width = 50)
+            self.filenameE.pack(side = LEFT)
+            
+            
+            ### self.chillerFeedback_LF
+            self.T_set = IntVar()
+            self.T_set.set(0)
+            self.T_min = IntVar()
+            self.T_min.set(221)
+            self.T_max = IntVar()
+            self.T_max.set(233)
+            self.Vpi_lim_low = DoubleVar()
+            self.Vpi_lim_low.set(0.3*PIEZO_VOLTAGE_MAX)
+            self.Vpi_lim_high = DoubleVar()
+            self.Vpi_lim_high.set(0.7*PIEZO_VOLTAGE_MAX)
+            self.T_delta_t = DoubleVar()
+            self.T_delta_t.set(30)
+            self.T_feedback = IntVar()
+            self.T_feedback.set(0)
+            
+            self.counter_T_feedback = 0.
+            self.counter_T_feedback_reset_bool = 1
+            
+            Label(self.chillerFeedback_LF, text = "T_set").pack(side = LEFT)
+            self.T_setE= Entry(self.chillerFeedback_LF, textvariable=self.T_set, bg='white', width = 5)
+            self.T_setE.pack(side = LEFT)
 
-                self.y1E= Entry(self.device1, textvariable=self.y1lim, bg='white', width = 5)
-                self.y1E.pack(side = LEFT)
-                
-                self.y2E= Entry(self.device1, textvariable=self.y2lim, bg='white', width = 5)
-                self.y2E.pack(side = LEFT)
-                
-                Label(self.save_LF, text = "sets to plot:").pack(side = LEFT)
-                self.sets_to_plotE= Entry(self.save_LF, textvariable=self.sets_to_plot, bg='white', width = 5)
-                self.sets_to_plotE.pack(side = LEFT)
+            Label(self.chillerFeedback_LF, text = "T_min").pack(side = LEFT)
+            self.T_minE= Entry(self.chillerFeedback_LF, textvariable=self.T_min, bg='white', width = 5)
+            self.T_minE.pack(side = LEFT)
 
-                
-                self.saveB = Button(self.save_LF, text = "save", command = self.save)
-                self.saveB.pack(side = LEFT)
-                
-                self.filenameE= Entry(self.save_LF, textvariable=self.filename, bg='white', width = 50)
-                self.filenameE.pack(side = LEFT)
-                
-                
-                ### self.chillerFeedback_LF
-                self.T_set = IntVar()
-                self.T_set.set(0)
-                self.T_min = IntVar()
-                self.T_min.set(221)
-                self.T_max = IntVar()
-                self.T_max.set(233)
-                self.Vpi_lim_low = DoubleVar()
-                self.Vpi_lim_low.set(0.3*PIEZO_VOLTAGE_MAX)
-                self.Vpi_lim_high = DoubleVar()
-                self.Vpi_lim_high.set(0.7*PIEZO_VOLTAGE_MAX)
-                self.T_delta_t = DoubleVar()
-                self.T_delta_t.set(30)
-                self.T_feedback = IntVar()
-                self.T_feedback.set(0)
-                
-                self.counter_T_feedback = 0.
-                self.counter_T_feedback_reset_bool = 1
-                
-                Label(self.chillerFeedback_LF, text = "T_set").pack(side = LEFT)
-                self.T_setE= Entry(self.chillerFeedback_LF, textvariable=self.T_set, bg='white', width = 5)
-                self.T_setE.pack(side = LEFT)
+            Label(self.chillerFeedback_LF, text = "T_max").pack(side = LEFT)
+            self.T_maxE= Entry(self.chillerFeedback_LF, textvariable=self.T_max, bg='white', width = 5)
+            self.T_maxE.pack(side = LEFT)
 
-                Label(self.chillerFeedback_LF, text = "T_min").pack(side = LEFT)
-                self.T_minE= Entry(self.chillerFeedback_LF, textvariable=self.T_min, bg='white', width = 5)
-                self.T_minE.pack(side = LEFT)
+            Label(self.chillerFeedback_LF, text = "Vpi_lim_low").pack(side = LEFT)
+            self.Vpi_lim_lowE= Entry(self.chillerFeedback_LF, textvariable=self.Vpi_lim_low, bg='white', width = 5)
+            self.Vpi_lim_lowE.pack(side = LEFT)
 
-                Label(self.chillerFeedback_LF, text = "T_max").pack(side = LEFT)
-                self.T_maxE= Entry(self.chillerFeedback_LF, textvariable=self.T_max, bg='white', width = 5)
-                self.T_maxE.pack(side = LEFT)
+            Label(self.chillerFeedback_LF, text = "Vpi_lim_high").pack(side = LEFT)
+            self.Vpi_lim_highE= Entry(self.chillerFeedback_LF, textvariable=self.Vpi_lim_high, bg='white', width = 5)
+            self.Vpi_lim_highE.pack(side = LEFT)
 
-                Label(self.chillerFeedback_LF, text = "Vpi_lim_low").pack(side = LEFT)
-                self.Vpi_lim_lowE= Entry(self.chillerFeedback_LF, textvariable=self.Vpi_lim_low, bg='white', width = 5)
-                self.Vpi_lim_lowE.pack(side = LEFT)
-
-                Label(self.chillerFeedback_LF, text = "Vpi_lim_high").pack(side = LEFT)
-                self.Vpi_lim_highE= Entry(self.chillerFeedback_LF, textvariable=self.Vpi_lim_high, bg='white', width = 5)
-                self.Vpi_lim_highE.pack(side = LEFT)
-
-                Label(self.chillerFeedback_LF, text = "T_delta_t").pack(side = LEFT)
-                self.T_delta_tE= Entry(self.chillerFeedback_LF, textvariable=self.T_delta_t, bg='white', width = 5)
-                self.T_delta_tE.pack(side = LEFT)
-                
-                self.T_feedbackCB = Checkbutton(self.chillerFeedback_LF, text = 'lock', variable = self.T_feedback)
-                self.T_feedbackCB.pack(side = LEFT, padx = 10)
-                
-                ### for matplotlib
-                self.fig = plt.figure(figsize = (5,3))
-                self.canvas = FigureCanvasTkAgg(self.fig, master=root)
-                self.toolbar = NavigationToolbar2TkAgg( self.canvas, root )
-                self.canvas.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1)#grid(row = 0, column = 2)#
-                
-                self.ax = plt.subplot(111)
-                self.ax.set_ylabel('signal [V]')
-                self.ax.set_xlabel('t [s]')              
-                self.ax.plot([1,4,2])
-                self.canvas.draw()
+            Label(self.chillerFeedback_LF, text = "T_delta_t").pack(side = LEFT)
+            self.T_delta_tE= Entry(self.chillerFeedback_LF, textvariable=self.T_delta_t, bg='white', width = 5)
+            self.T_delta_tE.pack(side = LEFT)
+            
+            self.T_feedbackCB = Checkbutton(self.chillerFeedback_LF, text = 'lock', variable = self.T_feedback)
+            self.T_feedbackCB.pack(side = LEFT, padx = 10)
+            
+            ### for matplotlib
+            self.fig = plt.figure(figsize = (5,3))
+            self.canvas = FigureCanvasTkAgg(self.fig, master=root)
+            self.toolbar = NavigationToolbar2TkAgg( self.canvas, root )
+            self.canvas.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1)#grid(row = 0, column = 2)#
+            
+            self.ax = plt.subplot(111)
+            self.ax.set_ylabel('signal [V]')
+            self.ax.set_xlabel('t [s]')              
+            self.ax.plot([1,4,2])
+            self.canvas.draw()
 
                
 
