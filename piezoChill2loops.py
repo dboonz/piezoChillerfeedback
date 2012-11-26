@@ -13,7 +13,8 @@ import numpy as np
 from Tkinter import *
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
-
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
 chiller_serialport = 3
 
@@ -28,6 +29,7 @@ class Application(Frame):
 
 
         def __init__(self,master = None):
+            self.logger = logging.getLogger('Baseplate')
             Frame.__init__(self,master)
             master.protocol("WM_DELETE_WINDOW",self.Quit)
             self.pack()
@@ -68,6 +70,9 @@ class Application(Frame):
            
             self.deviationVoltage_DG= DoubleVar()
             self.deviationVoltage_DG.set(0.05)
+
+            # 'record wether the last temperature change was up or down'
+            self.lastTemperatureChange = 'None' 
            
             " Startbutton with 'gumbo'"
             self.startB = Button(self.firstF, text = 'gumbo', command = self.mainLoop)
@@ -160,9 +165,9 @@ class Application(Frame):
             voltage_range = self.piezo_voltage_max - self.piezo_voltage_min
             self.Vpi_lim_low = DoubleVar()
 
-            self.Vpi_lim_low.set(self.piezo_voltage_min + 0.4*voltage_range)
+            self.Vpi_lim_low.set(self.piezo_voltage_min + 0.2*voltage_range)
             self.Vpi_lim_high = DoubleVar()
-            self.Vpi_lim_high.set(self.piezo_voltage_max - 0.4*voltage_range)
+            self.Vpi_lim_high.set(self.piezo_voltage_max - 0.2*voltage_range)
             self.T_delta_t = DoubleVar()
             self.T_delta_t.set(self.t_delta_t)
             self.T_feedback = IntVar()
@@ -233,26 +238,19 @@ class Application(Frame):
                 except :
                     attemps_connect_to_chiller += 1
                     time.sleep(0.5)
-                    print 'not attemp', attemps_connect_to_chiller
+                    self.logger.debug( 'not attemp %d' % attemps_connect_to_chiller)
                     if attemps_connect_to_chiller == 3:
+
                         raise BaseException(
                                 "Could not connect to chiller")
 
-                        print 'yeay'
-       
-           
             self.read = int32()
             self.taskHandle = TaskHandle(0)
             self.nr_samples = 10
-           
             self.data = init_channel(self.taskHandle,self.nr_samples,10000.0)
-           
-            print 'devices initialised'
-           
+            self.logger.info('devices initialised')
             self.devices_initialised.set(1)
 
-           
-           
        
         def deleteData(self):
                 self.t = []
@@ -284,14 +282,16 @@ class Application(Frame):
                     except:
                         last_piezo_voltage = self.dat[0][-1] # takes last value of data array of the index corresponding to the name piezo_voltage
                     if abs(last_piezo_voltage -offset_voltage) < 0.05:
-                            print 'last piezo voltage was smaller \
-                            0.05 V, device probably not locked'
+                            self.logger.debug(
+                            'last piezo voltage was smaller \
+                            0.05 V, device probably not locked')
                     else:
                         change_temperature = 0
-
+                        # It is possible that we want to change the temperature
                         if last_piezo_voltage > self.Vpi_lim_high.get():
                             # voltage too high. Decrease the temperature
-                            # by .1 degree
+                            # by .1 degrees
+                            # check when the last temperature change was
                             new_set_temp = self.T_set.get() - 1
                             #  check that the new set temperature is not
                             #  outside the limits
@@ -299,23 +299,31 @@ class Application(Frame):
                                 self.T_set.set(new_set_temp)
                                 change_temperature = 1
                             else:
-                                print 'Temp feedback reached higher specified limit'
+                                self.logger.error('Temp feedback reached\
+                                        higher specified limit')
                         if last_piezo_voltage < self.Vpi_lim_low.get():
                                 new_set_temp = self.T_set.get() + 1
                                 if new_set_temp < self.T_max.get():
                                     self.T_set.set(new_set_temp)
                                     change_temperature = 1
                                 else:
-                                    print 'Temp feedback reached lower specified limit'
+                                    self.logger.error('Temp feedback\
+                                            reached lower specified limit')
 
                         if change_temperature == 1:
-                            print "Changing baseplate temperature"
-                            time.sleep(0.3)
+                            self.logger.info(
+                            'Changing baseplate temperature to %f degrees c'
+                            % (T_set.get()/10.) )
+
+                            # time.sleep(0.3)
                             try:
                                 changedTemperature = serialChiller.setTemperature(serialPort = self.ser, temp = self.T_set.get())
-                                print 'CHANGED baseplate temperature at t = ',round(self.t[-1]), ' s  to  ', new_set_temp
+                                self.logger.info(
+                                        'CHANGED baseplate temperature at t = %d s to %d' % 
+                                        (round(self.t[-1]), new_set_temp))
                             except:
-                                print 'WARNING - could not CHANGE the set temperature at t = ',self.t[-1]
+                                self.logger.error('Could not change set \
+temperature at t = %d' % self.t[-1])
 
                             if changedTemperature != -1 and changedTemperature > self.T_min.get() and changedTemperature < self.T_max.get():
                                 #  double check it's okay
@@ -325,9 +333,9 @@ class Application(Frame):
 ##                                                                changedTemperature = readSetTemperature(self.ser)
 ##                                                        except:
 ##                                                                print 'WARNING - could not manually READ the set temperature at t = ',self.t[-1]
-                                    if changedTemperature != -1 and changedTemperature > self.T_min.get() and changedTemperature < self.T_max.get() :
-                                        self.T_set.set(changedTemperature)
-                                        print 'determined changed baseplate by manually asking, instead of the reply from serial_Chiller255p.setTemperature'
+                                if changedTemperature != -1 and changedTemperature > self.T_min.get() and changedTemperature < self.T_max.get() :
+                                    self.T_set.set(changedTemperature)
+                                    print 'determined changed baseplate by manually asking, instead of the reply from serial_Chiller255p.setTemperature'
 
 
 
@@ -338,7 +346,7 @@ class Application(Frame):
             # initialize the devices if the're not initialized yet
             if not self.devices_initialised.get():
                 self.initSerialToChiller_and_NI_daqmx()
-                print 'serialToChiller set up'
+                self.logger.info('devices set up')
             
 # stoploop is used to see if we have to continue running.
             self.stopLoop.set(0)
@@ -358,15 +366,10 @@ class Application(Frame):
                 root.update()
                 time.sleep(self.sleep_time_per_meas.get()/1000.)
 
-   
         def update_plots(self):
             """ Update the plots in the application """
             self.t.append(time.time() - self.t0)
-
             self.ax.clear()
-            
-# unsure about the comment below -DBF
-            ### updates the plots for the last n_sets_to_plot data aquisitions. x axis divided by 28 to come to seconds instead of shots
             n_sets_to_plot = self.sets_to_plot.get()
             n_sets_to_plot = min(n_sets_to_plot, len(self.t))
             if n_sets_to_plot <1:
@@ -376,6 +379,7 @@ class Application(Frame):
             self.ax.plot(self.t[-n_sets_to_plot:],
                     np.array(self.dat[0][-n_sets_to_plot:]),
                     label = 'piezo voltage comb')
+            #  draw limit indicators
             self.drawlimits()
             plt.legend(loc = 'lower left')
             # if custom limits are set, use them
@@ -421,15 +425,15 @@ class Application(Frame):
         def Quit(self):
 
                 try:
-                        serialChiller.close_chiller_port(self.ser)
+                    serialChiller.close_chiller_port(self.ser)
                 except:
-                       print 'could not close serial connection'
+                    self.logger.error('could not close serial connection')
                 try:
-                        if self.taskHandle.value != 0:
-                            nidaq.DAQmxStopTask(self.taskHandle)
-                            nidaq.DAQmxClearTask(self.taskHandle)
+                    if self.taskHandle.value != 0:
+                        nidaq.DAQmxStopTask(self.taskHandle)
+                        nidaq.DAQmxClearTask(self.taskHandle)
                 except:
-                        print 'could not close connection to NI device'
+                    self.logger.error('could not close connection to NI device')
                 plt.close('all')
                 self.master.quit()
 
