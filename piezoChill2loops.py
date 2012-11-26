@@ -73,6 +73,7 @@ class Application(Frame):
 
             # 'record wether the last temperature change was up or down'
             self.lastTemperatureChange = 'None' 
+            self.temperature_data = [] #  last temperature data
            
             " Startbutton with 'gumbo'"
             self.startB = Button(self.firstF, text = 'gumbo', command = self.mainLoop)
@@ -175,6 +176,9 @@ class Application(Frame):
            
             self.counter_T_feedback = 0.
             self.counter_T_feedback_reset_bool = 1
+
+            self.T_feedbackCB = Checkbutton(self.chillerFeedback_LF, text = 'lock', variable = self.T_feedback)
+            self.T_feedbackCB.pack(side = LEFT, padx = 10)
            
             Label(self.chillerFeedback_LF, text = "T_set").pack(side = LEFT)
             self.T_setE= Entry(self.chillerFeedback_LF, textvariable=self.T_set, bg='white', width = 5)
@@ -199,10 +203,7 @@ class Application(Frame):
             Label(self.chillerFeedback_LF, text = "T_delta_t").pack(side = LEFT)
             self.T_delta_tE= Entry(self.chillerFeedback_LF, textvariable=self.T_delta_t, bg='white', width = 5)
             self.T_delta_tE.pack(side = LEFT)
-           
-            self.T_feedbackCB = Checkbutton(self.chillerFeedback_LF, text = 'lock', variable = self.T_feedback)
-            self.T_feedbackCB.pack(side = LEFT, padx = 10)
-           
+          
             ### for matplotlib
             self.fig = plt.figure(figsize = (5,3))
             self.canvas = FigureCanvasTkAgg(self.fig, master=root)
@@ -213,6 +214,7 @@ class Application(Frame):
             self.ax.set_ylabel('signal [V]')
             self.ax.set_xlabel('t [s]')             
             self.ax.plot([1,4,2])
+            self.ax2 = self.ax.twinx()
             self.canvas.draw()
 
               
@@ -337,7 +339,13 @@ temperature at t = %d' % self.t[-1])
                                     self.T_set.set(changedTemperature)
                                     print 'determined changed baseplate by manually asking, instead of the reply from serial_Chiller255p.setTemperature'
 
+        def read_temperature_data(self):
+            """ Reads the temperature data and appends it to
+            self.temperature_data"""
 
+            current_temp = serialChiller.readCoolantTemperature(serialPort = self.ser)
+            self.temperature_data.append(current_temp)
+            
 
         def mainLoop(self):
             """Main loop of the program. Checks wether we have to run
@@ -359,6 +367,7 @@ temperature at t = %d' % self.t[-1])
             while self.stopLoop.get() != 1:
                 """ Main loop of the program """
                 self.read_data_NI_daqmx()
+                self.read_temperature_data()
                 self.update_plots()
                 #  if T_feedback is set, start the feedbback loop
                 if self.T_feedback.get():
@@ -385,8 +394,18 @@ temperature at t = %d' % self.t[-1])
             # if custom limits are set, use them
             if self.limit_plot_y_axis.get():
                 plt.ylim( self.y1lim.get(), self.y2lim.get() )
-                     #  update canvas
+
+            self.ax2.plot(self.t[-n_sets_to_plot:],
+                    self.temperature_data[-n_sets_to_plot:],
+                    label='coolant temperature')
+
+            self.ax2.set_ylabel('coolant temperature')
+            self.ax.set_ylabel('Piezo voltage')
+            self.ax.set_xlabel('time [s]')
+
+
             self.fig.canvas.draw()
+
 
         def drawlimits(self):
             """ Draw indicators for the lower limit, higher limit and the
