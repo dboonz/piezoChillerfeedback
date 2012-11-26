@@ -44,7 +44,8 @@ def CHK(err):
 
 
 # Initialize an analog input channel for voltage measurement
-def init_channel(taskHandle, nr_samples, clockspeed = 10000.0):
+def init_channel(taskHandle, nr_samples, clockspeed =
+        10000.0,returnstdev=False):
     max_num_samples = nr_samples
     data = numpy.zeros((max_num_samples,),dtype=numpy.float64)
 

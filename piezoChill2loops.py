@@ -26,6 +26,8 @@ class Application(Frame):
         piezo_voltage_min = -1
         t_delta_t = 30
         offset_voltage = 2.55 # Offset voltage for the loop
+        max_std_voltage_in_lock = 0.08 #  maximum standard deviation before
+        # out of lock is assumed
 
 
         def __init__(self,master = None):
@@ -265,6 +267,13 @@ class Application(Frame):
             data = read_voltage(self.taskHandle, self.nr_samples, self.data, self.read)
             for i in range(self.k):
               print "stdev: ", numpy.std(data)
+              if numpy.std(data) > 0.08:
+                  self.logger.error( "Probably out of lock. Suspending feedback")
+                  self.outoflock=True
+                  self.fig.set_facecolor('red')
+              else :
+                  self.outoflock = False
+                  self.fig.set_facecolor('white')
               self.dat[i].append(numpy.average(self.data))
        
         def feedback_T(self):
@@ -372,7 +381,10 @@ temperature at t = %d' % self.t[-1])
                 self.update_plots()
                 #  if T_feedback is set, start the feedbback loop
                 if self.T_feedback.get():
-                    self.feedback_T()
+                    if self.outoflock == False:
+                        self.feedback_T()
+                    else:
+                        self.logger.error("Out of lock!")
                 root.update()
                 time.sleep(self.sleep_time_per_meas.get()/1000.)
 
