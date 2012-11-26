@@ -3,7 +3,6 @@
 #from __future__ import with_statement
 import serial
 import binascii
-import time
 
 
 def hexToAscii(hexStr):
@@ -146,25 +145,27 @@ def readChillerStatus(serialPort, print_statues = True, print_chiller_working_Fi
 
 
 if __name__ == "__main__":
-        s = open_chiller_port(4)
+
+    import time
+    s = open_chiller_port(4)
 
         #s = serial.Serial(3,9600,bytesize=8,parity=serial.PARITY_NONE,stopbits=1,timeout = 0.6, xonxoff=1)
 #        s.write('.G0A5\r') # Sets chiller to standby
 #        s.write('.G1A6\r') # Sets chiller on run
-        print "Old junk:" , s.readlines()
+    print "Old junk:" , s.readlines()
         
-        #setTemperature(serialPort = s, temp = 200)
-        status = readChillerStatus(serialPort = s)
-        realtemp = readCoolantTemperature(serialPort = s)
-        settemp = readSetTemperature(serialPort = s)
-        print 'status',status
-        print 'actual temp',realtemp
-        print 'set temp.',settemp
-        print "Trying to set temperature to 18 degrees"
-        setTemperature(s,180)
-        print 'set temp.', settemp
+    #setTemperature(serialPort = s, temp = 200)
+    status = readChillerStatus(serialPort = s)
+    realtemp = readCoolantTemperature(serialPort = s)
+    settemp = readSetTemperature(serialPort = s)
+    print 'status',status
+    print 'actual temp',realtemp
+    print 'set temp.',settemp
+    print "Trying to set temperature to 18 degrees"
+    setTemperature(s,180)
+    print 'set temp.', settemp
 
-        close_chiller_port(s)
+    close_chiller_port(s)
 
 
 

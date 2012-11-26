@@ -24,18 +24,18 @@ asci_com_read_manifold_temperature	serialChiller.py	/^asci_com_read_manifold_tem
 asci_com_read_memory	serialChiller.py	/^asci_com_read_memory = hexToAscii(com_read_memory) # read set temperature$/;"	v
 asci_com_serial_watchdog	serialChiller.py	/^asci_com_serial_watchdog = hexToAscii(com_serial_watchdog)$/;"	v
 asciiToHex	serialChiller.py	/^def asciiToHex(asciiStr):$/;"	f
-ax	read_AI_signal_daqmx.py	/^    ax = fig.add_subplot(111)$/;"	v
+ax	read_AI_signal_daqmx.py	/^  ax = fig.add_subplot(111)$/;"	v
 chiller_serialport	piezoChill2loops.py	/^chiller_serialport = 3$/;"	v
 close_chiller_port	serialChiller.py	/^def close_chiller_port(serialPort):$/;"	f
 com_read_manifold_temperature	serialChiller.py	/^com_read_manifold_temperature = '2E4937370D'$/;"	v
 com_read_memory	serialChiller.py	/^com_read_memory = '2E483041360D'$/;"	v
 com_serial_watchdog	serialChiller.py	/^com_serial_watchdog = '2E5538330D'$/;"	v
 createWidgets	piezoChill2loops.py	/^        def createWidgets(self):$/;"	m	class:Application
-data	read_AI_signal_daqmx.py	/^        data = read_voltage(taskHandle, nr_samples, data, read)$/;"	v
-data	read_AI_signal_daqmx.py	/^    data = init_channel(taskHandle,nr_samples,10000.0)$/;"	v
+data	read_AI_signal_daqmx.py	/^      data = read_voltage(taskHandle, nr_samples, data, read)$/;"	v
+data	read_AI_signal_daqmx.py	/^  data = init_channel(taskHandle,nr_samples,10000.0)$/;"	v
 deleteData	piezoChill2loops.py	/^        def deleteData(self):$/;"	m	class:Application
 feedback_T	piezoChill2loops.py	/^        def feedback_T(self):$/;"	m	class:Application
-fig	read_AI_signal_daqmx.py	/^    fig = plt.figure()$/;"	v
+fig	read_AI_signal_daqmx.py	/^  fig = plt.figure()$/;"	v
 float64	read_AI_signal_daqmx.py	/^float64 = ctypes.c_double$/;"	v
 hexToAscii	serialChiller.py	/^def hexToAscii(hexStr):$/;"	f
 initSerialToChiller_and_NI_daqmx	piezoChill2loops.py	/^        def initSerialToChiller_and_NI_daqmx(self):$/;"	m	class:Application
@@ -44,26 +44,26 @@ init_channel2	read_AI_signal_daqmx.py	/^def init_channel2(taskHandle, nr_samples
 int32	read_AI_signal_daqmx.py	/^int32 = ctypes.c_long$/;"	v
 mainLoop	piezoChill2loops.py	/^        def mainLoop(self):$/;"	m	class:Application
 nidaq	read_AI_signal_daqmx.py	/^nidaq = ctypes.windll.nicaiu # load the DLL$/;"	v
-nr_samples	read_AI_signal_daqmx.py	/^    nr_samples = 10$/;"	v
+nr_samples	read_AI_signal_daqmx.py	/^  nr_samples = 10$/;"	v
 open_chiller_port	serialChiller.py	/^def open_chiller_port(comport):$/;"	f
-points	read_AI_signal_daqmx.py	/^    points = []$/;"	v
-read	read_AI_signal_daqmx.py	/^    read = int32()$/;"	v
+points	read_AI_signal_daqmx.py	/^  points = []$/;"	v
+read	read_AI_signal_daqmx.py	/^  read = int32()$/;"	v
 readChillerStatus	serialChiller.py	/^def readChillerStatus(serialPort, print_statues = True, print_chiller_working_Fine = False):$/;"	f
 readCoolantTemperature	serialChiller.py	/^def readCoolantTemperature(serialPort):$/;"	f
 readSetTemperature	serialChiller.py	/^def readSetTemperature(serialPort):$/;"	f
 read_data_NI_daqmx	piezoChill2loops.py	/^        def read_data_NI_daqmx(self):$/;"	m	class:Application
 read_voltage	read_AI_signal_daqmx.py	/^def read_voltage(taskHandle, nr_samples, data, read):$/;"	f
-realtemp	serialChiller.py	/^        realtemp = readCoolantTemperature(serialPort = s)$/;"	v
+realtemp	serialChiller.py	/^    realtemp = readCoolantTemperature(serialPort = s)$/;"	v
 root	piezoChill2loops.py	/^  root = Tk()$/;"	v
-s	serialChiller.py	/^        s = open_chiller_port(4)$/;"	v
-save	piezoChill2loops.py	/^        def save(self): $/;"	m	class:Application
+s	serialChiller.py	/^    s = open_chiller_port(4)$/;"	v
+save	piezoChill2loops.py	/^        def save(self):$/;"	m	class:Application
 setTemperature	serialChiller.py	/^def setTemperature(serialPort, temp = 200):$/;"	f
-settemp	serialChiller.py	/^        settemp = readSetTemperature(serialPort = s)$/;"	v
-start	read_AI_signal_daqmx.py	/^    start = time.time()$/;"	v
-status	serialChiller.py	/^        status = readChillerStatus(serialPort = s)$/;"	v
-taskHandle	read_AI_signal_daqmx.py	/^    taskHandle = TaskHandle(0)$/;"	v
+settemp	serialChiller.py	/^    settemp = readSetTemperature(serialPort = s)$/;"	v
+start	read_AI_signal_daqmx.py	/^  start = time.time()$/;"	v
+status	serialChiller.py	/^    status = readChillerStatus(serialPort = s)$/;"	v
+taskHandle	read_AI_signal_daqmx.py	/^  taskHandle = TaskHandle(0)$/;"	v
 test	piezoChill2loops.py	/^        def test(self):$/;"	m	class:Application
-time_axis	read_AI_signal_daqmx.py	/^    time_axis = []$/;"	v
+time_axis	read_AI_signal_daqmx.py	/^  time_axis = []$/;"	v
 uInt32	read_AI_signal_daqmx.py	/^uInt32 = ctypes.c_ulong$/;"	v
 uInt64	read_AI_signal_daqmx.py	/^uInt64 = ctypes.c_ulonglong$/;"	v
 update_plots	piezoChill2loops.py	/^        def update_plots(self):$/;"	m	class:Application
