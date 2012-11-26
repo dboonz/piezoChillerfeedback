@@ -15,23 +15,26 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
 
 
-PIEZO_VOLTAGE_MAX = 10 # could be 7, TODO
-# voltages are -1 to 6
-# offset = 2.6
 chiller_serialport = 3
-               
-
 
 class Application(Frame):
+            #  initial settings for the parameters
+        tmax = 233
+        tmin = 180
+        piezo_voltage_max = 6
+        piezo_voltage_min = -1
+        t_delta_t = 30
+        offset_voltage = 2.1 # Offset voltage for the loop
+
 
         def __init__(self,master = None):
-                Frame.__init__(self,master)
-                master.protocol("WM_DELETE_WINDOW",self.Quit)
-                self.pack()
-                self.master = master
-                self.mainframe = self
-                print 'serial chiller'
-                self.createWidgets()
+            Frame.__init__(self,master)
+            master.protocol("WM_DELETE_WINDOW",self.Quit)
+            self.pack()
+            self.master = master
+            self.mainframe = self
+            print 'serial chiller'
+            self.createWidgets()
 
         def test(self):
             self.T_set.set(serialChiller.readSetTemperature(self.ser))
@@ -109,10 +112,10 @@ class Application(Frame):
             self.limit_plot_y_axis.set(0)
            
             self.y1lim = DoubleVar()
-            self.y1lim.set(0.9)
+            self.y1lim.set(self.piezo_voltage_min)
            
             self.y2lim = DoubleVar()
-            self.y2lim.set(1.1)
+            self.y2lim.set(self.piezo_voltage_max)
 
            
             self.sets_to_plot = IntVar()
@@ -147,18 +150,19 @@ class Application(Frame):
            
            
             ### self.chillerFeedback_LF
+
             self.T_set = IntVar()
             self.T_set.set(0)
             self.T_min = IntVar()
-            self.T_min.set(221)
+            self.T_min.set(self.tmin)
             self.T_max = IntVar()
-            self.T_max.set(233)
+            self.T_max.set(self.tmax)
             self.Vpi_lim_low = DoubleVar()
-            self.Vpi_lim_low.set(0.3*PIEZO_VOLTAGE_MAX)
+            self.Vpi_lim_low.set(0.7*self.piezo_voltage_min)
             self.Vpi_lim_high = DoubleVar()
-            self.Vpi_lim_high.set(0.7*PIEZO_VOLTAGE_MAX)
+            self.Vpi_lim_high.set(0.7*self.piezo_voltage_max)
             self.T_delta_t = DoubleVar()
-            self.T_delta_t.set(30)
+            self.T_delta_t.set(self.t_delta_t)
             self.T_feedback = IntVar()
             self.T_feedback.set(0)
            
@@ -266,7 +270,7 @@ class Application(Frame):
             set. If not, change the temperature by .1 degree.
             
             """
-            offset_voltage = 2.1 # Offset voltage for the loop
+            offset_voltage = self.offset_voltage
             if self.counter_T_feedback_reset_bool == 1:
                 self.counter_T_feedback = self.t[-1]
                 self.counter_T_feedback_reset_bool = 0
@@ -358,6 +362,7 @@ class Application(Frame):
             self.t.append(time.time() - self.t0)
 
             self.ax.clear()
+            
 # unsure about the comment below -DBF
             ### updates the plots for the last n_sets_to_plot data aquisitions. x axis divided by 28 to come to seconds instead of shots
             n_sets_to_plot = self.sets_to_plot.get()
@@ -373,6 +378,10 @@ class Application(Frame):
             # if custom limits are set, use them
             if self.limit_plot_y_axis.get():
                 plt.ylim( self.y1lim.get(), self.y2lim.get() )
+            # Draw a red line for the offset voltage
+            xlim1, xlim2 = plt.xlim()
+            self.ax.plot([xlim1,xlim2],
+                    [self.offset_voltage, self.offset_voltage],'r')
             #  update canvas
             self.fig.canvas.draw()
 
