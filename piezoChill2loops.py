@@ -264,7 +264,8 @@ class Application(Frame):
             to self.dat"""
             data = read_voltage(self.taskHandle, self.nr_samples, self.data, self.read)
             for i in range(self.k):
-                self.dat[i].append(numpy.average(self.data))
+              print "stdev: ", numpy.std(data)
+              self.dat[i].append(numpy.average(self.data))
        
         def feedback_T(self):
             """ Feedback loop for the temperature 
@@ -400,11 +401,12 @@ temperature at t = %d' % self.t[-1])
 
             #  append labels
             lines = line1 + line2
-            labels = [l.get_label for l in lines]
-            self.ax.legend(lines,labels,log='lower left')
+            labels = [l.get_label() for l in lines]
+            self.ax.legend(lines,labels,loc='lower left')
             self.ax2.set_ylabel('coolant temperature')
             self.ax.set_ylabel('Piezo voltage')
             self.ax.set_xlabel('time [s]')
+            self.ax2.set_ylim((self.tmin/10.,self.tmax/10.))
 
 
             self.fig.canvas.draw()
