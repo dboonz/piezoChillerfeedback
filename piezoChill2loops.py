@@ -392,15 +392,15 @@ class Application(Frame):
 
             self.ax.plot([xlim1,xlim2],
                     [offset, offset],
-                    'r',label='offset voltage')
+                    'r-.',label='offset voltage')
 
             self.ax.plot([xlim1,xlim2],
                     [high_limit,high_limit],
-                    'r^',label='voltage limits')
+                    'r--',label='voltage limits')
 
             self.ax.plot([xlim1,xlim2],
                     [low_limit,low_limit],
-                    'r^')
+                    'r--')
 
 
 
