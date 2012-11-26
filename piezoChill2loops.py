@@ -26,6 +26,7 @@ class Application(Frame):
 
         def __init__(self,master = None):
                 Frame.__init__(self,master)
+                master.protocol("WM_DELETE_WINDOW",self.Quit)
                 self.pack()
                 self.master = master
                 self.mainframe = self
@@ -260,68 +261,70 @@ class Application(Frame):
                 self.dat[i].append(numpy.average(self.data))
        
         def feedback_T(self):
-            offset_voltage = 2.1 # Offset voltage for the voltage
-            " Feedback loop for the temperature "
+            """ Feedback loop for the temperature 
+            Check that the offset voltage is between the limits that were
+            set. If not, change the temperature by .1 degree.
+            
+            """
+            offset_voltage = 2.1 # Offset voltage for the loop
             if self.counter_T_feedback_reset_bool == 1:
-                    self.counter_T_feedback = self.t[-1]
-                    self.counter_T_feedback_reset_bool = 0
+                self.counter_T_feedback = self.t[-1]
+                self.counter_T_feedback_reset_bool = 0
             else:
-                    if (self.t[-1] - self.counter_T_feedback) > self.T_delta_t.get(): # so every self.T_delta_t seconds
-                            self.counter_T_feedback_reset_bool = 1
-                            try:
-                                    last_piezo_voltage = np.mean(self.dat[0][-5:]) # tries to average over the last 5 temperature values if possible
-                            except:
-                                    last_piezo_voltage = self.dat[0][-1] # takes last value of data array of the index corresponding to the name piezo_voltage
-                            if last_piezo_voltage < 0.05:
-                                    print 'last piezo voltage was smaller 0.05 V, piezo feedback close?'
+                if (self.t[-1] - self.counter_T_feedback) > self.T_delta_t.get(): # so every self.T_delta_t seconds
+                    self.counter_T_feedback_reset_bool = 1
+                    try:
+                        last_piezo_voltage = np.mean(self.dat[0][-5:]) # tries to average over the last 5 temperature values if possible
+                    except:
+                        last_piezo_voltage = self.dat[0][-1] # takes last value of data array of the index corresponding to the name piezo_voltage
+                    if last_piezo_voltage -offset_voltage < 0.05:
+                            print 'last piezo voltage was smaller \
+                            0.05 V, device probably not locked'
+                    else:
+                        change_temperature = 0
+
+                        if last_piezo_voltage > self.Vpi_lim_high.get():
+                            # voltage too high. Decrease the temperature
+                            # by .1 degree
+                            new_set_temp = self.T_set.get() - 1
+                            #  check that the new set temperature is not
+                            #  outside the limits
+                            if new_set_temp > self.T_min.get():
+                                self.T_set.set(new_set_temp)
+                                change_temperature = 1
                             else:
-                           
-                                    change_temperature = 0
-                                   
-                                    if last_piezo_voltage > self.Vpi_lim_high.get():
-                                            new_set_temp = self.T_set.get() - 1
-                                            if new_set_temp > self.T_min.get():
-                                                    self.T_set.set(new_set_temp)
-                                                    change_temperature = 1
-                                            else:
-                                                    print 'Temp feedback reached higher specified limit'
-                                   
-                                    if last_piezo_voltage < self.Vpi_lim_low.get():
-                                            new_set_temp = self.T_set.get() + 1
-                                            if new_set_temp < self.T_max.get():
-                                                    self.T_set.set(new_set_temp)
-                                                    change_temperature = 1
-                                            else:
-                                                    print 'Temp feedback reached lower specified limit'
-                                           
-                                    if change_temperature == 1:
-                                            time.sleep(0.3)
-                                            try:
-                                                    changedTemperature = serialChiller.setTemperature(serialPort = self.ser, temp = self.T_set.get())
-                                                    print 'CHANGED baseplate temperature at t = ',round(self.t[-1]), ' s  to  ', new_set_temp
-                                            except:
-                                                    print 'WARNING - could not CHANGE the set temperature at t = ',self.t[-1]
-                                           
-                                            if changedTemperature != -1 and changedTemperature > self.T_min.get() and changedTemperature < self.T_max.get():
-                                                    self.T_set.set(changedTemperature)
-                                            else: # in case just the reply from the changed temperature hanged, we ask for the temperature one more time manually
-##                                                        try:
+                                print 'Temp feedback reached higher specified limit'
+                        if last_piezo_voltage < self.Vpi_lim_low.get():
+                                new_set_temp = self.T_set.get() + 1
+                                if new_set_temp < self.T_max.get():
+                                    self.T_set.set(new_set_temp)
+                                    change_temperature = 1
+                                else:
+                                    print 'Temp feedback reached lower specified limit'
+
+                        if change_temperature == 1:
+                            print "Changing baseplate temperature"
+                            time.sleep(0.3)
+                            try:
+                                changedTemperature = serialChiller.setTemperature(serialPort = self.ser, temp = self.T_set.get())
+                                print 'CHANGED baseplate temperature at t = ',round(self.t[-1]), ' s  to  ', new_set_temp
+                            except:
+                                print 'WARNING - could not CHANGE the set temperature at t = ',self.t[-1]
+
+                            if changedTemperature != -1 and changedTemperature > self.T_min.get() and changedTemperature < self.T_max.get():
+                                #  double check it's okay
+                                self.T_set.set(changedTemperature)
+                            else: # in case just the reply from the changed temperature hanged, we ask for the temperature one more time manually
+                                ##                                                        try:
 ##                                                                changedTemperature = readSetTemperature(self.ser)
 ##                                                        except:
 ##                                                                print 'WARNING - could not manually READ the set temperature at t = ',self.t[-1]
-                                                    if changedTemperature != -1 and changedTemperature > self.T_min.get() and changedTemperature < self.T_max.get() :
-                                                            self.T_set.set(changedTemperature)
-                                                            print 'determined changed baseplate by manually asking, instead of the reply from serial_Chiller255p.setTemperature'
-                                                           
-                                                   
-                                            #time.sleep(0.3)
-                                            #serial_Chiller255p.readChillerStatus(serialPort = self.serialPort_S0_chiller)
-                                           
-                                            #print 'tried to change chiller temperatur'
-                                    print 'checked baseplate temperature at t = ',round(self.t[-1]), ' s'
-                           
-                           
-      
+                                    if changedTemperature != -1 and changedTemperature > self.T_min.get() and changedTemperature < self.T_max.get() :
+                                        self.T_set.set(changedTemperature)
+                                        print 'determined changed baseplate by manually asking, instead of the reply from serial_Chiller255p.setTemperature'
+
+
+
         def mainLoop(self):
             """Main loop of the program. Checks wether we have to run
             anything, and starts running """
