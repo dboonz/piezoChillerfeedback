@@ -157,10 +157,12 @@ class Application(Frame):
             self.T_min.set(self.tmin)
             self.T_max = IntVar()
             self.T_max.set(self.tmax)
+            voltage_range = self.piezo_voltage_max - self.piezo_voltage_min
             self.Vpi_lim_low = DoubleVar()
-            self.Vpi_lim_low.set(0.7*self.piezo_voltage_min)
+
+            self.Vpi_lim_low.set(self.piezo_voltage_min + 0.2*voltage_range)
             self.Vpi_lim_high = DoubleVar()
-            self.Vpi_lim_high.set(0.7*self.piezo_voltage_max)
+            self.Vpi_lim_high.set(self.piezo_voltage_max - 0.2*voltage_range)
             self.T_delta_t = DoubleVar()
             self.T_delta_t.set(self.t_delta_t)
             self.T_feedback = IntVar()
