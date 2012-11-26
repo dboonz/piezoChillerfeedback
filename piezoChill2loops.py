@@ -313,7 +313,7 @@ class Application(Frame):
                         if change_temperature == 1:
                             self.logger.info(
                             'Changing baseplate temperature to %f degrees c'
-                            % (T_set.get()/10.) )
+                            % (self.T_set.get()/10.) )
 
                             # time.sleep(0.3)
                             try:
