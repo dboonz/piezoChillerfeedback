@@ -401,7 +401,7 @@ temperature at t = %d' % self.t[-1])
             #  append labels
             lines = line1 + line2
             labels = [l.get_label for l in lines]
-            self.ax1.legend(lines,labels,log='lower left')
+            self.ax.legend(lines,labels,log='lower left')
             self.ax2.set_ylabel('coolant temperature')
             self.ax.set_ylabel('Piezo voltage')
             self.ax.set_xlabel('time [s]')
