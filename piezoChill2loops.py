@@ -379,26 +379,29 @@ temperature at t = %d' % self.t[-1])
             """ Update the plots in the application """
             self.t.append(time.time() - self.t0)
             self.ax.clear()
+            self.ax2.clear()
             n_sets_to_plot = self.sets_to_plot.get()
             n_sets_to_plot = min(n_sets_to_plot, len(self.t))
             if n_sets_to_plot <1:
                     n_sets_to_plot = 1
             # plot the last n_sets_to_plot, unless there is not enough
             # available
-            self.ax.plot(self.t[-n_sets_to_plot:],
+            line1 = self.ax.plot(self.t[-n_sets_to_plot:],
                     np.array(self.dat[0][-n_sets_to_plot:]),
                     label = 'piezo voltage comb')
             #  draw limit indicators
             self.drawlimits()
-            plt.legend(loc = 'lower left')
             # if custom limits are set, use them
             if self.limit_plot_y_axis.get():
                 plt.ylim( self.y1lim.get(), self.y2lim.get() )
-
-            self.ax2.plot(self.t[-n_sets_to_plot:],
-                    self.temperature_data[-n_sets_to_plot:],
+            line2 = self.ax2.plot(self.t[-n_sets_to_plot:],
+                    self.temperature_data[-n_sets_to_plot:],'k',
                     label='coolant temperature')
 
+            #  append labels
+            lines = line1 + line2
+            labels = [l.get_label for l in lines]
+            self.ax1.legend(lines,labels,log='lower left')
             self.ax2.set_ylabel('coolant temperature')
             self.ax.set_ylabel('Piezo voltage')
             self.ax.set_xlabel('time [s]')
