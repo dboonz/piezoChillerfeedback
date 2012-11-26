@@ -160,9 +160,9 @@ class Application(Frame):
             voltage_range = self.piezo_voltage_max - self.piezo_voltage_min
             self.Vpi_lim_low = DoubleVar()
 
-            self.Vpi_lim_low.set(self.piezo_voltage_min + 0.2*voltage_range)
+            self.Vpi_lim_low.set(self.piezo_voltage_min + 0.4*voltage_range)
             self.Vpi_lim_high = DoubleVar()
-            self.Vpi_lim_high.set(self.piezo_voltage_max - 0.2*voltage_range)
+            self.Vpi_lim_high.set(self.piezo_voltage_max - 0.4*voltage_range)
             self.T_delta_t = DoubleVar()
             self.T_delta_t.set(self.t_delta_t)
             self.T_feedback = IntVar()
@@ -283,7 +283,7 @@ class Application(Frame):
                         last_piezo_voltage = np.mean(self.dat[0][-5:]) # tries to average over the last 5 temperature values if possible
                     except:
                         last_piezo_voltage = self.dat[0][-1] # takes last value of data array of the index corresponding to the name piezo_voltage
-                    if last_piezo_voltage -offset_voltage < 0.05:
+                    if abs(last_piezo_voltage -offset_voltage) < 0.05:
                             print 'last piezo voltage was smaller \
                             0.05 V, device probably not locked'
                     else:
