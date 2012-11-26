@@ -24,7 +24,7 @@ class Application(Frame):
         piezo_voltage_max = 6
         piezo_voltage_min = -1
         t_delta_t = 30
-        offset_voltage = 2.1 # Offset voltage for the loop
+        offset_voltage = 2.55 # Offset voltage for the loop
 
 
         def __init__(self,master = None):
@@ -374,16 +374,35 @@ class Application(Frame):
             self.ax.plot(self.t[-n_sets_to_plot:],
                     np.array(self.dat[0][-n_sets_to_plot:]),
                     label = 'piezo voltage comb')
+            self.drawlimits()
             plt.legend(loc = 'lower left')
             # if custom limits are set, use them
             if self.limit_plot_y_axis.get():
                 plt.ylim( self.y1lim.get(), self.y2lim.get() )
-            # Draw a red line for the offset voltage
-            xlim1, xlim2 = plt.xlim()
-            self.ax.plot([xlim1,xlim2],
-                    [self.offset_voltage, self.offset_voltage],'r')
-            #  update canvas
+                     #  update canvas
             self.fig.canvas.draw()
+
+        def drawlimits(self):
+            """ Draw indicators for the lower limit, higher limit and the
+            offset voltage"""
+            xlim1, xlim2 = plt.xlim()
+            high_limit = self.Vpi_lim_high.get()
+            low_limit  = self.Vpi_lim_low.get()
+            offset = self.offset_voltage
+
+            self.ax.plot([xlim1,xlim2],
+                    [offset, offset],
+                    'r',label='offset voltage')
+
+            self.ax.plot([xlim1,xlim2],
+                    [high_limit,high_limit],
+                    'r^',label='voltage limits')
+
+            self.ax.plot([xlim1,xlim2],
+                    [low_limit,low_limit],
+                    'r^')
+
+
 
         def save(self):
             " Save the temperatures to a file "
