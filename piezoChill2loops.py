@@ -4,19 +4,21 @@ import matplotlib
 matplotlib.use('TkAgg')
 
 import serialChiller
-try :
-  from read_AI_signal_daqmx import *
-except :
-  print "Probably on linux. NIDAQ won't work"
+try:
+    from read_AI_signal_daqmx import *
+except:
+    print "Probably on linux. NIDAQ won't work"
 import time
 import numpy as np
 from Tkinter import *
 import matplotlib.pyplot as plt
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg,\
+    NavigationToolbar2TkAgg
 import logging
 logging.basicConfig(level=logging.DEBUG)
 
 chiller_serialport = 3
+
 
 class Application(Frame):
             #  initial settings for the parameters
@@ -26,14 +28,13 @@ class Application(Frame):
         piezo_voltage_min = -1
         t_delta_t = 30
         offset_voltage = 2.6
-        max_std_voltage_in_lock = 0.03 #  maximum standard deviation before
+        max_std_voltage_in_lock = 0.03  # maximum standard deviation before
         # out of lock is assumed
 
-
-        def __init__(self,master = None):
+        def __init__(self, master=None):
             self.logger = logging.getLogger('Baseplate')
-            Frame.__init__(self,master)
-            master.protocol("WM_DELETE_WINDOW",self.Quit)
+            Frame.__init__(self, master)
+            master.protocol("WM_DELETE_WINDOW", self.Quit)
             self.pack()
             self.master = master
             self.mainframe = self
@@ -45,12 +46,12 @@ class Application(Frame):
         def createWidgets(self):
             """ Creates the widgets for this application """
             " Top frame "
-            self.firstF = Frame(self.mainframe,bd=2, relief = RIDGE)
+            self.firstF = Frame(self.mainframe, bd=2, relief=RIDGE)
             self.firstF.grid()
 
             " Frame for device "
-            self.device1 = LabelFrame(self.mainframe,bd=2, relief = RIDGE)#, text = 'Temp. feedback rep.rate')
-            self.device1.grid(row = 1, column = 0)#, columnspan = 4)               
+            self.device1 = LabelFrame(self.mainframe, bd=2, relief=RIDGE)
+            self.device1.grid(row=1, column=0)#, columnspan = 4)               
 
             " Chiller feedback frame"
             self.chillerFeedback_LF = LabelFrame(self.mainframe,bd=2, relief = RIDGE, text = 'PUMP: Temp. feedback rep.rate')
@@ -400,8 +401,8 @@ temperature at t = %d' % self.t[-1])
         def update_plots(self):
             """ Update the plots in the application """
             self.t.append(time.time() - self.t0)
-            self.ax.clear()
-            self.ax2.clear()
+            self.ax.cla()
+            self.ax2.cla()
             n_sets_to_plot = self.sets_to_plot.get()
             n_sets_to_plot = min(n_sets_to_plot, len(self.t))
             if n_sets_to_plot <1:
@@ -415,10 +416,12 @@ temperature at t = %d' % self.t[-1])
             self.drawlimits()
             # if custom limits are set, use them
             if self.limit_plot_y_axis.get():
-                plt.ylim( self.y1lim.get(), self.y2lim.get() )
+                self.ax.ylim( self.y1lim.get(), self.y2lim.get() )
+
             line2 = self.ax2.plot(self.t[-n_sets_to_plot:],
                     self.temperature_data[-n_sets_to_plot:],'k',
                     label='coolant temperature')
+
 
             #  append labels
             lines = line1 + line2
@@ -428,15 +431,12 @@ temperature at t = %d' % self.t[-1])
             self.ax.set_ylabel('Piezo voltage')
             self.ax.set_xlabel('time [s]')
             self.ax2.set_ylim((self.tmin/10.,self.tmax/10.))
-
-
             self.fig.canvas.draw()
-
 
         def drawlimits(self):
             """ Draw indicators for the lower limit, higher limit and the
             offset voltage"""
-            xlim1, xlim2 = plt.xlim()
+            xlim1, xlim2 = self.ax.xlim()
             high_limit = self.Vpi_lim_high.get()
             low_limit  = self.Vpi_lim_low.get()
             offset = self.offset_voltage
@@ -484,10 +484,10 @@ temperature at t = %d' % self.t[-1])
 
 
 if __name__ == '__main__':
-  root = Tk()
+      root = Tk()
 
-  root.title("Chiller feedback for Piezo")
-  app = Application(root)
-  root.mainloop()
+      root.title("Chiller feedback for Piezo")
+      app = Application(root)
+      root.mainloop()
 
-  root.destroy()
+      root.destroy()
