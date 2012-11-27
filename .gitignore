@@ -1,0 +1,5 @@
+# ignore pyc files
+*.pyc
+
+# ignore swp files
+*.swp
