@@ -239,13 +239,14 @@ class Application(Frame):
                     self.T_set.set(serialChiller.readSetTemperature(self.ser))
                     time.sleep(0.3)
                     break
-                except :
+                except SerialException:
                     attemps_connect_to_chiller += 1
                     time.sleep(0.5)
                     self.logger.error( 'Could not connect to chiller %d time(s)' % attemps_connect_to_chiller)
                     if attemps_connect_to_chiller == 3:
                         raise BaseException(
                                 "Could not connect to chiller")
+
 
             self.read = int32()
             self.taskHandle = TaskHandle(0)
