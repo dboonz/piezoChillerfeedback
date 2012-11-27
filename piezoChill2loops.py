@@ -265,10 +265,10 @@ class Application(Frame):
             self.outoflock=state
             if state:
                 # flash red for out of lock
-                if self.fig.get_facecolor() == self.whitebackground:
-                    self.fig.set_facecolor('red')
-                else :
-                    self.fig.set_facecolor('white')
+#                if self.fig.get_facecolor() == self.whitebackground:
+                self.fig.set_facecolor('red')
+#                else :
+#                    self.fig.set_facecolor('white')
 
             else:
                 self.fig.set_facecolor('white')
@@ -285,6 +285,7 @@ class Application(Frame):
                   self.setOutOfLock(True)
               else :
                   self.setOutOfLock(False)
+              print numpy.std(data)/numpy.average(data)
               self.dat[i].append(numpy.average(self.data))
        
         def feedback_T(self):
@@ -300,11 +301,11 @@ class Application(Frame):
                 if (self.t[-1] - self.counter_T_feedback) > self.T_delta_t.get(): # so every self.T_delta_t seconds
                     self.counter_T_feedback_reset_bool = 1
                     try:
-                        last_piezo_voltage = np.mean(self.dat[0][-5:]) # tries to average over the last 5 temperature values if possible
+                        last_piezo_voltage = np.mean(self.dat[0][-10:]) # tries to average over the last 5 temperature values if possible
                     except:
                         last_piezo_voltage = self.dat[0][-1] # takes last value of data array of the index corresponding to the name piezo_voltage
-                    if abs(last_piezo_voltage) < 0.05: # if there's no voltage on the input channel, lockbox is probably off
-                        self.logger.debug('Lockbox probably off.')
+                    if abs(last_piezo_voltage) < 0.5: # if there's no voltage on the input channel, lockbox is probably off
+                        self.setOutOfLock(True)
                     else:
                         change_temperature = 0
                         # It is possible that we want to change the temperature
