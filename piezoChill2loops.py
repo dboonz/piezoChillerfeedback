@@ -233,15 +233,16 @@ class Application(Frame):
             while attemps_connect_to_chiller < 3:
                 try :
                     self.ser = serialChiller.open_chiller_port(chiller_serialport)
-                    self.logger('Established connection to chiller')
+                    self.logger.debug('Established connection to chiller')
                     realtemp = serialChiller.readCoolantTemperature(serialPort = self.ser)
-                    self.logger('actual temp %.1f' % (realtemp/10.))
+                    self.logger.debug('actual temp %.1f' % (realtemp/10.))
                     self.T_set.set(serialChiller.readSetTemperature(self.ser))
+                    time.sleep(0.3)
                     break
                 except :
                     attemps_connect_to_chiller += 1
                     time.sleep(0.5)
-                    self.logger.debug( 'Could not connect to chiller %d time(s)' % attemps_connect_to_chiller)
+                    self.logger.error( 'Could not connect to chiller %d time(s)' % attemps_connect_to_chiller)
                     if attemps_connect_to_chiller == 3:
                         raise BaseException(
                                 "Could not connect to chiller")
