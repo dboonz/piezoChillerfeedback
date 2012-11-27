@@ -26,7 +26,7 @@ class Application(Frame):
         piezo_voltage_min = -1
         t_delta_t = 30
         offset_voltage = 2.6
-        max_std_voltage_in_lock = 0.01 #  maximum standard deviation before
+        max_std_voltage_in_lock = 0.03 #  maximum standard deviation before
         # out of lock is assumed
 
 

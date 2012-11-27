@@ -147,7 +147,7 @@ def readChillerStatus(serialPort, print_statues = True, print_chiller_working_Fi
 if __name__ == "__main__":
 
     import time
-    s = open_chiller_port(4)
+    s = open_chiller_port(3)
 
         #s = serial.Serial(3,9600,bytesize=8,parity=serial.PARITY_NONE,stopbits=1,timeout = 0.6, xonxoff=1)
 #        s.write('.G0A5\r') # Sets chiller to standby
