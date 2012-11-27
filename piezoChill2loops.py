@@ -25,7 +25,6 @@ class Application(Frame):
         piezo_voltage_max = 6
         piezo_voltage_min = -1
         t_delta_t = 30
-        offset_voltage = 2.55 # Offset voltage for the loop
         max_std_voltage_in_lock = 0.08 #  maximum standard deviation before
         # out of lock is assumed
 
@@ -282,7 +281,6 @@ class Application(Frame):
             set. If not, change the temperature by .1 degree.
             
             """
-            offset_voltage = self.offset_voltage
             if self.counter_T_feedback_reset_bool == 1:
                 self.counter_T_feedback = self.t[-1]
                 self.counter_T_feedback_reset_bool = 0
@@ -293,10 +291,8 @@ class Application(Frame):
                         last_piezo_voltage = np.mean(self.dat[0][-5:]) # tries to average over the last 5 temperature values if possible
                     except:
                         last_piezo_voltage = self.dat[0][-1] # takes last value of data array of the index corresponding to the name piezo_voltage
-                    if abs(last_piezo_voltage -offset_voltage) < 0.05:
-                            self.logger.debug(
-                            'last piezo voltage was smaller \
-                            0.05 V, device probably not locked')
+                    if abs(last_piezo_voltage) < 0.05: # if there's no voltage on the input channel, lockbox is probably off
+                        self.logger.debug('Lockbox probably off')
                     else:
                         change_temperature = 0
                         # It is possible that we want to change the temperature
