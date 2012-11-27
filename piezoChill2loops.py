@@ -26,7 +26,7 @@ class Application(Frame):
         piezo_voltage_min = -1
         t_delta_t = 30
         offset_voltage = 2.55 # Offset voltage for the loop
-        max_std_voltage_in_lock = 0.08 #  maximum standard deviation before
+        max_std_voltage_in_lock = 0.02 #  maximum standard deviation before
         # out of lock is assumed
 
 
@@ -267,7 +267,7 @@ class Application(Frame):
             data = read_voltage(self.taskHandle, self.nr_samples, self.data, self.read)
             for i in range(self.k):
               print "stdev: ", numpy.std(data)
-              if numpy.std(data) > 0.08:
+              if numpy.std(data) > self.max_std_voltage_in_lock:
                   self.logger.error( "Probably out of lock. Suspending feedback")
                   self.outoflock=True
                   self.fig.set_facecolor('red')
