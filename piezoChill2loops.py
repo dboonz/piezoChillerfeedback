@@ -281,9 +281,11 @@ class Application(Frame):
             data = read_voltage(self.taskHandle, self.nr_samples, self.data, self.read)
             for i in range(self.k):
               if np.std(data) > self.max_std_voltage_in_lock :
-                  self.logger.error( "Probably out of lock. Suspending feedback.")
+                  " Usually happens when the lockbox is out of lock"
+                  self.logger.error( "Stdev on voltage too much. Suspending")
                   self.setOutOfLock(True)
-              if abs(np.average(data)) < 0.5:
+              if abs(np.average(data)) < 0.3:
+                  " Usually when the lockbox is off"
                   self.logger.error("Lockbox probably off. Suspending.")
                   self.setOutOfLock(True)
               else :
