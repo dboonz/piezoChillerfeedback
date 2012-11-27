@@ -61,6 +61,7 @@ realtemp	serialChiller.py	/^    realtemp = readCoolantTemperature(serialPort = s
 root	piezoChill2loops.py	/^  root = Tk()$/;"	v
 s	serialChiller.py	/^    s = open_chiller_port(4)$/;"	v
 save	piezoChill2loops.py	/^        def save(self):$/;"	m	class:Application
+setOutOfLock	piezoChill2loops.py	/^        def setOutOfLock(self,state):$/;"	m	class:Application
 setTemperature	serialChiller.py	/^def setTemperature(serialPort, temp = 200):$/;"	f
 settemp	serialChiller.py	/^    settemp = readSetTemperature(serialPort = s)$/;"	v
 start	read_AI_signal_daqmx.py	/^  start = time.time()$/;"	v
