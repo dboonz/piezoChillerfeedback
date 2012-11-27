@@ -37,7 +37,6 @@ class Application(Frame):
             self.pack()
             self.master = master
             self.mainframe = self
-            print 'serial chiller'
             self.createWidgets()
 
         def test(self):
@@ -234,23 +233,16 @@ class Application(Frame):
             while attemps_connect_to_chiller < 3:
                 try :
                     self.ser = serialChiller.open_chiller_port(chiller_serialport)
-                    print 'establised connection with the ', attemps_connect_to_chiller, ' attemp'
-##                                status = readChillerStatus(serialPort = self.ser)
+                    self.logger('Established connection to chiller')
                     realtemp = serialChiller.readCoolantTemperature(serialPort = self.ser)
-##                                settemp = readSetTemperature(serialPort = self.ser)
-####                                print 'status',status
-                    print 'actual temp',realtemp
-##                                print 'set temp.',settemp
+                    self.logger('actual temp %.1f' % (realtemp/10.))
                     self.T_set.set(serialChiller.readSetTemperature(self.ser))
-
-                    time.sleep(0.3)
                     break
                 except :
                     attemps_connect_to_chiller += 1
                     time.sleep(0.5)
-                    self.logger.debug( 'not attemp %d' % attemps_connect_to_chiller)
+                    self.logger.debug( 'Could not connect to chiller %d time(s)' % attemps_connect_to_chiller)
                     if attemps_connect_to_chiller == 3:
-
                         raise BaseException(
                                 "Could not connect to chiller")
 
@@ -272,12 +264,9 @@ class Application(Frame):
             if state:
                 # flash red for out of lock
                 if self.fig.get_facecolor() == self.whitebackground:
-                    print "Background was white, set to red"
                     self.fig.set_facecolor('red')
                 else :
-                    print "Background was red, set to white"
                     self.fig.set_facecolor('white')
-                self.logger.debug('Out of lock')
 
             else:
                 self.fig.set_facecolor('white')
@@ -289,7 +278,6 @@ class Application(Frame):
             to self.dat"""
             data = read_voltage(self.taskHandle, self.nr_samples, self.data, self.read)
             for i in range(self.k):
-              print "stdev: ", numpy.std(data)
               if numpy.std(data) > self.max_std_voltage_in_lock :
                   self.logger.error( "Probably out of lock. Suspending feedback")
                   self.setOutOfLock(True)
@@ -359,10 +347,6 @@ temperature at t = %d' % self.t[-1])
                                 #  double check it's okay
                                 self.T_set.set(changedTemperature)
                             else: # in case just the reply from the changed temperature hanged, we ask for the temperature one more time manually
-                                ##                                                        try:
-##                                                                changedTemperature = readSetTemperature(self.ser)
-##                                                        except:
-##                                                                print 'WARNING - could not manually READ the set temperature at t = ',self.t[-1]
                                 if changedTemperature != -1 and changedTemperature > self.T_min.get() and changedTemperature < self.T_max.get() :
                                     self.T_set.set(changedTemperature)
                                     print 'determined changed baseplate by manually asking, instead of the reply from serial_Chiller255p.setTemperature'
