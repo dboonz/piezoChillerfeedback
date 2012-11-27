@@ -25,8 +25,7 @@ class Application(Frame):
         piezo_voltage_max = 6
         piezo_voltage_min = -1
         t_delta_t = 30
-        offset_voltage = 2.55 # Offset voltage for the loop
-        max_std_voltage_in_lock = 0.02 #  maximum standard deviation before
+        max_std_voltage_in_lock = 0.08 #  maximum standard deviation before
         # out of lock is assumed
 
 
@@ -211,14 +210,20 @@ class Application(Frame):
             self.canvas = FigureCanvasTkAgg(self.fig, master=root)
             self.toolbar = NavigationToolbar2TkAgg( self.canvas, root )
             self.canvas.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1)#grid(row = 0, column = 2)#
-           
+ 
+ 
+            # get the tuples indicating the different background colors, used for a warning
+            self.fig.set_facecolor('red')
+            self.redbackground = self.fig.get_facecolor()
+            self.fig.set_facecolor('white')
+            self.whitebackground = self.fig.get_facecolor()
+          
             self.ax = plt.subplot(111)
             self.ax.set_ylabel('signal [V]')
             self.ax.set_xlabel('t [s]')             
             self.ax.plot([1,4,2])
             self.ax2 = self.ax.twinx()
-            self.canvas.draw()
-
+            self.canvas.draw() 
               
 
                
@@ -260,20 +265,35 @@ class Application(Frame):
                 self.t = []
                 for i in range(self.k):
                         self.dat[i] = []
-       
+        def setOutOfLock(self,state):
+            """ Sets the out of lock mode to true or false, and updates the gui"""
+            
+            if state:
+                self.outoflock=state
+                # flash red for out of lock
+                if self.fig.get_facecolor() == self.whitebackground:
+                    print "Background was white, set to red"
+                    self.fig.set_facecolor('red')
+                else :
+                    print "Background was red, set to white"
+                    self.fig.set_facecolor('white')
+                self.logger.debug('Out of lock')
+
+            else:
+                self.fig.set_facecolor('white')
+
+
         def read_data_NI_daqmx(self):
             """ Read out the average voltage on channel one, and append it
             to self.dat"""
             data = read_voltage(self.taskHandle, self.nr_samples, self.data, self.read)
             for i in range(self.k):
               print "stdev: ", numpy.std(data)
-              if numpy.std(data) > self.max_std_voltage_in_lock:
+              if numpy.std(data) > 0.08:
                   self.logger.error( "Probably out of lock. Suspending feedback")
-                  self.outoflock=True
-                  self.fig.set_facecolor('red')
+                  self.setOutOfLock(True)
               else :
-                  self.outoflock = False
-                  self.fig.set_facecolor('white')
+                  self.setOutOfLock(False)
               self.dat[i].append(numpy.average(self.data))
        
         def feedback_T(self):
@@ -282,7 +302,6 @@ class Application(Frame):
             set. If not, change the temperature by .1 degree.
             
             """
-            offset_voltage = self.offset_voltage
             if self.counter_T_feedback_reset_bool == 1:
                 self.counter_T_feedback = self.t[-1]
                 self.counter_T_feedback_reset_bool = 0
@@ -293,10 +312,8 @@ class Application(Frame):
                         last_piezo_voltage = np.mean(self.dat[0][-5:]) # tries to average over the last 5 temperature values if possible
                     except:
                         last_piezo_voltage = self.dat[0][-1] # takes last value of data array of the index corresponding to the name piezo_voltage
-                    if abs(last_piezo_voltage -offset_voltage) < 0.05:
-                            self.logger.debug(
-                            'last piezo voltage was smaller \
-                            0.05 V, device probably not locked')
+                    if abs(last_piezo_voltage) < 0.05: # if there's no voltage on the input channel, lockbox is probably off
+                        self.logger.debug('Lockbox probably off.')
                     else:
                         change_temperature = 0
                         # It is possible that we want to change the temperature
