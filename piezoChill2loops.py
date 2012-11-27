@@ -99,8 +99,8 @@ class Application(Frame):
             self.ShutdownAndQuitB.pack(side = RIGHT)
            
 
-            self.k = number_dataArrays = 2
-            self.k = number_dataArrays = 2 # Don't know what it does, but
+            self.k = number_dataArrays = 1
+            self.k = number_dataArrays = 1 # Don't know what it does, but
                                             # probably it should be one if there's only one monitoring
            
             self.dat = []
@@ -280,12 +280,14 @@ class Application(Frame):
             to self.dat"""
             data = read_voltage(self.taskHandle, self.nr_samples, self.data, self.read)
             for i in range(self.k):
-              if numpy.std(data) > self.max_std_voltage_in_lock :
-                  self.logger.error( "Probably out of lock. Suspending feedback")
+              if np.std(data) > self.max_std_voltage_in_lock :
+                  self.logger.error( "Probably out of lock. Suspending feedback.")
+                  self.setOutOfLock(True)
+              if abs(np.average(data)) < 0.5:
+                  self.logger.error("Lockbox probably off. Suspending.")
                   self.setOutOfLock(True)
               else :
                   self.setOutOfLock(False)
-              print numpy.std(data)/numpy.average(data)
               self.dat[i].append(numpy.average(self.data))
        
         def feedback_T(self):
