@@ -312,6 +312,7 @@ class Application(Frame):
                     if abs(last_piezo_voltage) < 0.5: # if there's no voltage on the input channel, lockbox is probably off
                         self.setOutOfLock(True)
                     else:
+                        self.logger.debug("Possibly changing temperature")
                         change_temperature = 0
                         # It is possible that we want to change the temperature
                         if last_piezo_voltage > self.Vpi_lim_high.get():
