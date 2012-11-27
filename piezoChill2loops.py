@@ -25,8 +25,8 @@ class Application(Frame):
         piezo_voltage_max = 6
         piezo_voltage_min = -1
         t_delta_t = 30
-        offset = 2.6
-        max_std_voltage_in_lock = 0.08 #  maximum standard deviation before
+        offset_voltage = 2.6
+        max_std_voltage_in_lock = 0.01 #  maximum standard deviation before
         # out of lock is assumed
 
 
@@ -268,9 +268,8 @@ class Application(Frame):
                         self.dat[i] = []
         def setOutOfLock(self,state):
             """ Sets the out of lock mode to true or false, and updates the gui"""
-            
+            self.outoflock=state
             if state:
-                self.outoflock=state
                 # flash red for out of lock
                 if self.fig.get_facecolor() == self.whitebackground:
                     print "Background was white, set to red"
@@ -282,6 +281,7 @@ class Application(Frame):
 
             else:
                 self.fig.set_facecolor('white')
+            self.canvas.draw()
 
 
         def read_data_NI_daqmx(self):
@@ -290,7 +290,7 @@ class Application(Frame):
             data = read_voltage(self.taskHandle, self.nr_samples, self.data, self.read)
             for i in range(self.k):
               print "stdev: ", numpy.std(data)
-              if numpy.std(data) > 0.08:
+              if numpy.std(data) > self.max_std_voltage_in_lock :
                   self.logger.error( "Probably out of lock. Suspending feedback")
                   self.setOutOfLock(True)
               else :
