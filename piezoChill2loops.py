@@ -16,7 +16,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg,\
     NavigationToolbar2TkAgg
 import logging
 logging.basicConfig(level=logging.DEBUG)
-
+from serial import SerialException
 chiller_serialport = 3
 
 
