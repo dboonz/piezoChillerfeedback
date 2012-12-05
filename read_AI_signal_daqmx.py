@@ -103,7 +103,7 @@ if __name__ == "__main__":
   fig = plt.figure()
   read = int32()
   taskHandle = TaskHandle(0)
-  nr_samples = 10
+  nr_samples = 1000 # Changed do 1000
   data = init_channel(taskHandle,nr_samples,10000.0)
 
   points = []

@@ -1,4 +1,4 @@
- # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from __future__ import with_statement
 import matplotlib
 matplotlib.use('TkAgg')
@@ -17,19 +17,23 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg,\
 import logging
 logging.basicConfig(level=logging.DEBUG)
 from serial import SerialException
+
 chiller_serialport = 3
 
 
 class Application(Frame):
             #  initial settings for the parameters
-        tmax = 233
-        tmin = 180
-        piezo_voltage_max = 6
-        piezo_voltage_min = -1
-        t_delta_t = 30
-        offset_voltage = 2.6
+        tmax = 233  # initial upper boundary on chiller temperature
+        tmin = 180  # initial lower boundary on chiller temperature
+        piezo_voltage_max = 6  #  maximum voltage on piezo
+        piezo_voltage_min = -1  # minimum voltage on piezo
+        t_delta_t = 30  # lapse time before starting the feedback loop
+        offset_voltage = 2.6 # offset voltage. ie voltage that is set when
+        #  the lockbox is on but not locking.
         max_std_voltage_in_lock = 0.03  # maximum standard deviation before
         # out of lock is assumed
+        minimum_voltage = 0.05 # if the voltage is less than this, it is
+        #  assumed that the lockbox has been switched off
 
         def __init__(self, master=None):
             self.logger = logging.getLogger('Baseplate')
@@ -51,14 +55,19 @@ class Application(Frame):
 
             " Frame for device "
             self.device1 = LabelFrame(self.mainframe, bd=2, relief=RIDGE)
-            self.device1.grid(row=1, column=0)#, columnspan = 4)               
+            self.device1.grid(row=1, column=0)  # , columnspan = 4)               
 
             " Chiller feedback frame"
-            self.chillerFeedback_LF = LabelFrame(self.mainframe,bd=2, relief = RIDGE, text = 'PUMP: Temp. feedback rep.rate')
-            self.chillerFeedback_LF.grid(row = 2, column = 0)#, columnspan = 4)
+            self.chillerFeedback_LF = LabelFrame(self.mainframe,
+                                                 bd=2, 
+                                                 relief=RIDGE, 
+                                                 text=
+                                                 'PUMP: Temp. feedback rep.rate'
+                                                 )
+            self.chillerFeedback_LF.grid(row=2, column=0)  # , columnspan = 4)
           
-            self.save_LF = LabelFrame(self.mainframe,bd=2, relief = RIDGE)#, text = 'fit')
-            self.save_LF.grid(row = 4, column = 0)#, columnspan = 4)
+            self.save_LF = LabelFrame(self.mainframe,bd=2, relief=RIDGE)
+            self.save_LF.grid(row=4, column=0)
            
             " Create the variables for the application "
             self.stopLoop = IntVar()
@@ -100,8 +109,8 @@ class Application(Frame):
             self.ShutdownAndQuitB.pack(side = RIGHT)
            
 
-            self.k = number_dataArrays = 1
-            self.k = number_dataArrays = 1 # Don't know what it does, but
+            self.k = 1 #  number_dataArrays = 1
+#             self.k = number_dataArrays = 1 # Don't know what it does, but
                                             # probably it should be one if there's only one monitoring
            
             self.dat = []
@@ -219,15 +228,17 @@ class Application(Frame):
             self.fig.set_facecolor('white')
             self.whitebackground = self.fig.get_facecolor()
           
-            self.ax = plt.subplot(111)
+            self.ax = plt.subplot(211)
+            self.raw_data_axis = plt.subplot(212)
+            self.raw_data_axis.set_ylabel('Voltage')
+            self.raw_data_axis.set_xlabel('Time')
+            self.raw_data_axis.set_title('Bla')
             self.ax.set_ylabel('signal [V]')
             self.ax.set_xlabel('t [s]')             
             self.ax.plot([1,4,2])
             self.ax2 = self.ax.twinx()
             self.canvas.draw() 
-              
 
-               
         def initSerialToChiller_and_NI_daqmx(self):
 
             attemps_connect_to_chiller = 0
@@ -251,7 +262,7 @@ class Application(Frame):
 
             self.read = int32()
             self.taskHandle = TaskHandle(0)
-            self.nr_samples = 10
+            self.nr_samples = 1000 #  changed from 10 samples to more
             self.data = init_channel(self.taskHandle,self.nr_samples,10000.0)
             self.logger.info('devices initialised')
             self.devices_initialised.set(1)
@@ -280,6 +291,10 @@ class Application(Frame):
             """ Read out the average voltage on channel one, and append it
             to self.dat"""
             data = read_voltage(self.taskHandle, self.nr_samples, self.data, self.read)
+            # plot the data
+            self.raw_data_axis.plot(data)
+
+
             for i in range(self.k):
               if np.std(data) > self.max_std_voltage_in_lock :
                   " Usually happens when the lockbox is out of lock"
@@ -297,7 +312,6 @@ class Application(Frame):
             """ Feedback loop for the temperature 
             Check that the offset voltage is between the limits that were
             set. If not, change the temperature by .1 degree.
-            
             """
             if self.counter_T_feedback_reset_bool == 1:
                 self.counter_T_feedback = self.t[-1]

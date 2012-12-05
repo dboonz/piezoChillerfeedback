@@ -17,8 +17,8 @@ Quit	piezoChill2loops.py	/^        def Quit(self):$/;"	m	class:Application
 TEMP_MAX	serialChiller.py	/^TEMP_MAX = 300$/;"	v
 TEMP_MIN	serialChiller.py	/^TEMP_MIN = 160$/;"	v
 TaskHandle	read_AI_signal_daqmx.py	/^TaskHandle = uInt32$/;"	v
-__init__	piezoChill2loops.py	/^        def __init__(self,master = None):$/;"	m	class:Application
-app	piezoChill2loops.py	/^  app = Application(root)$/;"	v
+__init__	piezoChill2loops.py	/^        def __init__(self, master=None):$/;"	m	class:Application
+app	piezoChill2loops.py	/^      app = Application(root)$/;"	v
 asci_com_read_manifold_temperature	serialChiller.py	/^asci_com_read_manifold_temperature = hexToAscii(com_read_manifold_temperature) #read actual temperature$/;"	v
 asci_com_read_memory	serialChiller.py	/^asci_com_read_memory = hexToAscii(com_read_memory) # read set temperature$/;"	v
 asci_com_serial_watchdog	serialChiller.py	/^asci_com_serial_watchdog = hexToAscii(com_serial_watchdog)$/;"	v
@@ -43,12 +43,13 @@ init_channel	read_AI_signal_daqmx.py	/^def init_channel(taskHandle, nr_samples, 
 init_channel2	read_AI_signal_daqmx.py	/^def init_channel2(taskHandle, nr_samples, clockspeed = 10000.0):$/;"	f
 int32	read_AI_signal_daqmx.py	/^int32 = ctypes.c_long$/;"	v
 mainLoop	piezoChill2loops.py	/^        def mainLoop(self):$/;"	m	class:Application
-max_std_voltage_in_lock	piezoChill2loops.py	/^        max_std_voltage_in_lock = 0.08 #  maximum standard deviation before$/;"	v	class:Application
+max_std_voltage_in_lock	piezoChill2loops.py	/^        max_std_voltage_in_lock = 0.03  # maximum standard deviation before$/;"	v	class:Application
 nidaq	read_AI_signal_daqmx.py	/^nidaq = ctypes.windll.nicaiu # load the DLL$/;"	v
 nr_samples	read_AI_signal_daqmx.py	/^  nr_samples = 10$/;"	v
+offset_voltage	piezoChill2loops.py	/^        offset_voltage = 2.6 # offset voltage. ie voltage that is set when$/;"	v	class:Application
 open_chiller_port	serialChiller.py	/^def open_chiller_port(comport):$/;"	f
-piezo_voltage_max	piezoChill2loops.py	/^        piezo_voltage_max = 6$/;"	v	class:Application
-piezo_voltage_min	piezoChill2loops.py	/^        piezo_voltage_min = -1$/;"	v	class:Application
+piezo_voltage_max	piezoChill2loops.py	/^        piezo_voltage_max = 6  #  maximum voltage on piezo$/;"	v	class:Application
+piezo_voltage_min	piezoChill2loops.py	/^        piezo_voltage_min = -1  # minimum voltage on piezo$/;"	v	class:Application
 points	read_AI_signal_daqmx.py	/^  points = []$/;"	v
 read	read_AI_signal_daqmx.py	/^  read = int32()$/;"	v
 readChillerStatus	serialChiller.py	/^def readChillerStatus(serialPort, print_statues = True, print_chiller_working_Fine = False):$/;"	f
@@ -58,20 +59,20 @@ read_data_NI_daqmx	piezoChill2loops.py	/^        def read_data_NI_daqmx(self):$/
 read_temperature_data	piezoChill2loops.py	/^        def read_temperature_data(self):$/;"	m	class:Application
 read_voltage	read_AI_signal_daqmx.py	/^def read_voltage(taskHandle, nr_samples, data, read):$/;"	f
 realtemp	serialChiller.py	/^    realtemp = readCoolantTemperature(serialPort = s)$/;"	v
-root	piezoChill2loops.py	/^  root = Tk()$/;"	v
-s	serialChiller.py	/^    s = open_chiller_port(4)$/;"	v
+root	piezoChill2loops.py	/^      root = Tk()$/;"	v
+s	serialChiller.py	/^    s = open_chiller_port(3)$/;"	v
 save	piezoChill2loops.py	/^        def save(self):$/;"	m	class:Application
 setOutOfLock	piezoChill2loops.py	/^        def setOutOfLock(self,state):$/;"	m	class:Application
 setTemperature	serialChiller.py	/^def setTemperature(serialPort, temp = 200):$/;"	f
 settemp	serialChiller.py	/^    settemp = readSetTemperature(serialPort = s)$/;"	v
 start	read_AI_signal_daqmx.py	/^  start = time.time()$/;"	v
 status	serialChiller.py	/^    status = readChillerStatus(serialPort = s)$/;"	v
-t_delta_t	piezoChill2loops.py	/^        t_delta_t = 30$/;"	v	class:Application
+t_delta_t	piezoChill2loops.py	/^        t_delta_t = 30  # lapse time before starting the feedback loop$/;"	v	class:Application
 taskHandle	read_AI_signal_daqmx.py	/^  taskHandle = TaskHandle(0)$/;"	v
 test	piezoChill2loops.py	/^        def test(self):$/;"	m	class:Application
 time_axis	read_AI_signal_daqmx.py	/^  time_axis = []$/;"	v
-tmax	piezoChill2loops.py	/^        tmax = 233$/;"	v	class:Application
-tmin	piezoChill2loops.py	/^        tmin = 180$/;"	v	class:Application
+tmax	piezoChill2loops.py	/^        tmax = 233  # initial upper boundary on chiller temperature$/;"	v	class:Application
+tmin	piezoChill2loops.py	/^        tmin = 180  # initial lower boundary on chiller temperature$/;"	v	class:Application
 uInt32	read_AI_signal_daqmx.py	/^uInt32 = ctypes.c_ulong$/;"	v
 uInt64	read_AI_signal_daqmx.py	/^uInt64 = ctypes.c_ulonglong$/;"	v
 update_plots	piezoChill2loops.py	/^        def update_plots(self):$/;"	m	class:Application
