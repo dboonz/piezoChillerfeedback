@@ -233,6 +233,7 @@ class Application(Frame):
             self.raw_data_axis.set_ylabel('Voltage')
             self.raw_data_axis.set_xlabel('Time')
             self.raw_data_axis.set_title('Bla')
+            self.raw_data_axis.hold(False)
             self.ax.set_ylabel('signal [V]')
             self.ax.set_xlabel('t [s]')             
             self.ax.plot([1,4,2])
