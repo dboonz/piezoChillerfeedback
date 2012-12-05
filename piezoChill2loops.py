@@ -32,7 +32,7 @@ class Application(Frame):
         #  the lockbox is on but not locking.
         max_std_voltage_in_lock = 0.03  # maximum standard deviation before
         # out of lock is assumed
-        minimum_voltage = 0.05 # if the voltage is less than this, it is
+        minimum_voltage = 0.5 # if the voltage is less than this, it is
         #  assumed that the lockbox has been switched off
 
         def __init__(self, master=None):
@@ -323,7 +323,7 @@ class Application(Frame):
                         last_piezo_voltage = np.mean(self.dat[0][-10:]) # tries to average over the last 5 temperature values if possible
                     except:
                         last_piezo_voltage = self.dat[0][-1] # takes last value of data array of the index corresponding to the name piezo_voltage
-                    if abs(last_piezo_voltage) < 0.5: # if there's no voltage on the input channel, lockbox is probably off
+                    if abs(last_piezo_voltage) < self.minimum_voltage: # if there's no voltage on the input channel, lockbox is probably off
                         self.setOutOfLock(True)
                     else:
                         self.logger.debug("Possibly changing temperature")
